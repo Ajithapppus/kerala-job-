@@ -1,0 +1,2603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KeralaHire - Find Your Dream Job in Kerala</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React and ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel for JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            kerala: {
+              lightGreen: '#EBF7EE',
+              green: '#0F5132',
+              darkGreen: '#0A3B24',
+              gold: '#D4AF37',
+              darkGold: '#AA8811',
+              charcoal: '#1E293B',
+              obsidian: '#020617',
+            }
+          },
+          boxShadow: {
+            'glass': '0 8px 32px 0 rgba(15, 81, 50, 0.08)',
+            'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+            'premium': '0 10px 30px -10px rgba(15, 81, 50, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom premium styling and scrollbars */
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 10px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0F5132;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-nav {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .dark .glass-nav {
+      background: rgba(2, 6, 23, 0.8);
+      border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+    }
+
+    .glass-card {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-modal {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .dark .glass-modal {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Keyframe Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.05); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 8s infinite;
+    }
+
+    /* Traditional design border element */
+    .kasavu-border {
+      background: linear-gradient(90deg, #D4AF37 0%, #FFDF73 50%, #D4AF37 100%);
+      height: 4px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-300">
+
+  <!-- Root React Mount Node -->
+  <div id="root"></div>
+
+  <!-- Babel/JSX Compiler Script -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    // --- MOCK SEED DATABASE ---
+    const INITIAL_COMPANIES = [
+      {
+        id: "ust",
+        name: "UST Global",
+        logo: "🌴",
+        logoColor: "bg-teal-600 text-white",
+        rating: 4.4,
+        reviewCount: 342,
+        about: "UST is a global digital technology solutions company. Headquartered in California, our massive campuses in Technopark Trivandrum and Infopark Kochi drive digital transformation for global Fortune 500 enterprises with over 15,000 employees in Kerala.",
+        industry: "IT Services & Consulting",
+        location: "Infopark Kochi / Technopark Trivandrum",
+        website: "https://www.ust.com",
+        employees: "15,000+ (Kerala)",
+        gallery: [
+          "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Rahul Nair", rating: 5, date: "2026-04-12", comment: "Outstanding work culture, modern infrastructure, and great work-life balance at the Trivandrum campus." },
+          { author: "Anjali Krishna", rating: 4, date: "2026-05-02", comment: "Excellent training programs for freshers. The food courts and campus sports facilities are top-tier." }
+        ],
+        isVerified: true
+      },
+      {
+        id: "infosys",
+        name: "Infosys",
+        logo: "🔷",
+        logoColor: "bg-blue-600 text-white",
+        rating: 4.2,
+        reviewCount: 452,
+        about: "Infosys is a global leader in next-generation digital services and consulting. Our signature campus in Technopark, Trivandrum is built with traditional Kerala architectural ethics and represents one of the largest IT hubs in the state, offering pioneering software development operations.",
+        industry: "IT Services",
+        location: "Technopark Trivandrum",
+        website: "https://www.infosys.com",
+        employees: "10,000+ (Kerala)",
+        gallery: [
+          "https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Deepak K.", rating: 4, date: "2026-03-20", comment: "The Technopark campus is beautiful. Standard MNC processes, great learning curve, and helpful peers." }
+        ],
+        isVerified: true
+      },
+      {
+        id: "tataelxsi",
+        name: "Tata Elxsi",
+        logo: "🧩",
+        logoColor: "bg-cyan-700 text-white",
+        rating: 4.1,
+        reviewCount: 198,
+        about: "Tata Elxsi is a world-leading provider of design and technology services across industries. Our Trivandrum centers specialize in embedded systems, automotive engineering, broadcast engineering, IoT, and high-fidelity product prototyping.",
+        industry: "Engineering Research & Design",
+        location: "Technopark Trivandrum",
+        website: "https://www.tataelxsi.com",
+        employees: "4,000+ (Kerala)",
+        gallery: [
+          "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Meera Pillai", rating: 4, date: "2026-05-10", comment: "Highly technical workspace. Perfect if you want to work on cutting-edge automotive and smart TV software." }
+        ],
+        isVerified: true
+      },
+      {
+        id: "ibs",
+        name: "IBS Software",
+        logo: "✈️",
+        logoColor: "bg-red-600 text-white",
+        rating: 4.3,
+        reviewCount: 220,
+        about: "IBS Software is a leading SaaS solutions provider to the travel, transportation, and logistics industries globally. Headquartered in Technopark Trivandrum with offices in Kochi, IBS manages core operational platforms for airlines, cruise lines, and oil & gas giants.",
+        industry: "Software Products & SaaS",
+        location: "Technopark Trivandrum / Infopark Kochi",
+        website: "https://www.ibsplc.com",
+        employees: "3,500+ (Kerala)",
+        gallery: [
+          "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Vishnu Prasad", rating: 5, date: "2026-04-18", comment: "Pure software product company feel. Exceptional domain knowledge in aviation tech, outstanding people." }
+        ],
+        isVerified: true
+      },
+      {
+        id: "toonz",
+        name: "Toonz Animation",
+        logo: "🎨",
+        logoColor: "bg-yellow-500 text-black",
+        rating: 4.0,
+        reviewCount: 88,
+        about: "Toonz Animation is one of Asia's most celebrated animation houses and creative studios. Located in Trivandrum, we produce international 2D/3D cartoon series, CGI, visual effects, and game assets partnering with Marvel, Disney, and Cartoon Network.",
+        industry: "Animation & Media",
+        location: "Technopark Trivandrum",
+        website: "https://toonz.co",
+        employees: "800+ (Kerala)",
+        gallery: [
+          "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Sujith S.", rating: 4, date: "2026-02-15", comment: "Highly creative environment. The best place in India to start an animation and visual effects career." }
+        ],
+        isVerified: true
+      },
+      {
+        id: "carestack",
+        name: "CareStack (KSUM)",
+        logo: "🦷",
+        logoColor: "bg-emerald-500 text-white",
+        rating: 4.5,
+        reviewCount: 72,
+        about: "CareStack is a high-growth dental software startup backed by the Kerala Startup Mission (KSUM) and international VCs. We build a cloud-based practice management platform enabling dental offices to simplify billing, scheduling, and clinical charting.",
+        industry: "Healthcare SaaS Startup",
+        location: "Infopark Kochi",
+        website: "https://carestack.com",
+        employees: "600+ (Kochi)",
+        gallery: [
+          "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&auto=format&fit=crop&q=60"
+        ],
+        reviews: [
+          { author: "Akhil Dev", rating: 5, date: "2026-05-15", comment: "Hyper-growth startup culture. High ownership, stock options, and outstanding engineering talent in Kochi." }
+        ],
+        isVerified: true
+      }
+    ];
+
+    const INITIAL_JOBS = [
+      {
+        id: "job1",
+        title: "Senior Full Stack Engineer (React/Node)",
+        companyId: "ust",
+        companyName: "UST Global",
+        logo: "🌴",
+        logoColor: "bg-teal-600 text-white",
+        salary: "₹12,00,000 - ₹18,00,000 LPA",
+        salaryVal: 15,
+        experience: "5 - 8 Years",
+        expMin: 5,
+        location: "Kochi",
+        district: "Ernakulam",
+        jobType: "Hybrid",
+        category: "Software Development",
+        desc: "We are seeking a senior engineer to drive our enterprise client platform migrations. You will engineer microservices, lead front-end teams in React, and architect robust cloud pipelines.",
+        skills: ["React.js", "Node.js", "Express", "MongoDB", "AWS", "Docker"],
+        responsibilities: [
+          "Develop clean, responsive UI matching high-fidelity Figma mockups.",
+          "Design microservices APIs and link MongoDB with optimized indexes.",
+          "Mentor 3+ junior engineers and conduct pull request reviews.",
+          "Collaborate with DevOps on CI/CD pipelines using GitHub Actions."
+        ],
+        benefits: ["Comprehensive Family Health Insurance", "Flexible Work Hours", "Annual Performance Bonus", "Technopark/Infopark shuttle service"],
+        process: ["Online Technical Assessment", "System Design Interview (Video)", "Managerial & Culture Fit Round"],
+        isFeatured: true,
+        isApproved: true,
+        postedDate: "2026-05-18"
+      },
+      {
+        id: "job2",
+        title: "Associate Software Engineer - Java / Spring Boot",
+        companyId: "infosys",
+        companyName: "Infosys",
+        logo: "🔷",
+        logoColor: "bg-blue-600 text-white",
+        salary: "₹4,50,000 - ₹7,00,000 LPA",
+        salaryVal: 5.5,
+        experience: "1 - 3 Years",
+        expMin: 1,
+        location: "Thiruvananthapuram",
+        district: "Thiruvananthapuram",
+        jobType: "Onsite",
+        category: "Software Development",
+        desc: "Join our core digital engineering group at Trivandrum. This role involves software coding, debugging, unit testing, and operating with large-scale relational databases.",
+        skills: ["Java", "Spring Boot", "REST APIs", "MySQL", "Hibernate", "Git"],
+        responsibilities: [
+          "Write clean, documented, and reusable Java code.",
+          "Integrate RESTful services with Angular/React frontends.",
+          "Optimize database query routines to resolve latency issues.",
+          "Participate in daily Agile/Scrum sprint ceremonies."
+        ],
+        benefits: ["Fully Paid Gym & Recreation Access", "Structured Technical Learning Paths", "Medical Cover & Dental Benefits"],
+        process: ["Coding Test on Hackerrank", "Technical Panel Interview", "HR Alignment Session"],
+        isFeatured: true,
+        isApproved: true,
+        postedDate: "2026-05-19"
+      },
+      {
+        id: "job3",
+        title: "Embedded Systems Developer (Automotive IoT)",
+        companyId: "tataelxsi",
+        companyName: "Tata Elxsi",
+        logo: "🧩",
+        logoColor: "bg-cyan-700 text-white",
+        salary: "₹8,00,000 - ₹14,00,000 LPA",
+        salaryVal: 11,
+        experience: "3 - 6 Years",
+        expMin: 3,
+        location: "Thiruvananthapuram",
+        district: "Thiruvananthapuram",
+        jobType: "Onsite",
+        category: "Hardware & Core Engineering",
+        desc: "We are hiring specialized engineers for our autonomous driving and smart dashboard teams. You will work on real-time operating systems (RTOS), CAN protocols, and custom board integrations.",
+        skills: ["Embedded C", "C++", "RTOS", "CAN Bus", "Microcontrollers", "Linux Kernel"],
+        responsibilities: [
+          "Write highly optimized embedded C code for real-time sensors.",
+          "Perform unit testing on custom micro-controller boards.",
+          "Debug communications systems using logic analyzers.",
+          "Document technical system specifications for German automotive clients."
+        ],
+        benefits: ["Paid Certifications (Embedded/IoT)", "Flexible Health Accounts", "Gratuity and Pension Cover"],
+        process: ["Embedded C Live Coding Round", "Hardware Architecture Interview", "HR Finalization"],
+        isFeatured: false,
+        isApproved: true,
+        postedDate: "2026-05-15"
+      },
+      {
+        id: "job4",
+        title: "Product Support Specialist (Aviation SaaS)",
+        companyId: "ibs",
+        companyName: "IBS Software",
+        logo: "✈️",
+        logoColor: "bg-red-600 text-white",
+        salary: "₹5,00,000 - ₹9,00,000 LPA",
+        salaryVal: 7,
+        experience: "2 - 5 Years",
+        expMin: 2,
+        location: "Kochi",
+        district: "Ernakulam",
+        jobType: "Remote",
+        category: "Customer Success & Operations",
+        desc: "Liaise with our global airline clients to manage product issue tickets. Perform SQL log analysis, system checks, and guide developers in diagnosing urgent booking bugs.",
+        skills: ["SQL Queries", "Technical Support", "Linux Commands", "APIs", "Customer Relations"],
+        responsibilities: [
+          "Acknowledge and categorize international flight booking system support tickets.",
+          "Execute database checks to verify transactional consistency.",
+          "Liaise with L3 product engineering on urgent system bugs.",
+          "Publish client-facing incident reports and support manuals."
+        ],
+        benefits: ["Work From Home Allowance", "Broadband Subsidy", "24/7 Shift Allowance Pay"],
+        process: ["Aviation Domain Assessment", "Technical Operations Interview", "HR Interview"],
+        isFeatured: false,
+        isApproved: true,
+        postedDate: "2026-05-10"
+      },
+      {
+        id: "job5",
+        title: "3D Character Animator",
+        companyId: "toonz",
+        companyName: "Toonz Animation",
+        logo: "🎨",
+        logoColor: "bg-yellow-500 text-black",
+        salary: "₹6,00,000 - ₹10,00,000 LPA",
+        salaryVal: 8,
+        experience: "3 - 7 Years",
+        expMin: 3,
+        location: "Thiruvananthapuram",
+        district: "Thiruvananthapuram",
+        jobType: "Onsite",
+        category: "Creative Arts & Design",
+        desc: "Bring world-class characters to life! We are seeking creative 3D animators proficient in Autodesk Maya, who have a stellar showreel demonstrating expert understanding of body mechanics and facial expressions.",
+        skills: ["Autodesk Maya", "3D Animation", "Character Rigging", "Blender", "Texturing"],
+        responsibilities: [
+          "Produce high-quality 3D character animation matching director guidelines.",
+          "Coordinate with modelers and riggers to ensure smooth animations.",
+          "Incorporate animatic and audio reference clips into the timeline.",
+          "Refine and apply animations post camera layout."
+        ],
+        benefits: ["State-of-the-Art Wacom Studio Workstations", "Annual Toonz Animation Festival Tickets", "Wellness and Mindfulness programs"],
+        process: ["Showreel Evaluation", "Animation Studio Practical Test (2 Days)", "Creative Director Panel"],
+        isFeatured: true,
+        isApproved: true,
+        postedDate: "2026-05-12"
+      },
+      {
+        id: "job6",
+        title: "Frontend UI Developer (React/Vite)",
+        companyId: "carestack",
+        companyName: "CareStack (KSUM)",
+        logo: "🦷",
+        logoColor: "bg-emerald-500 text-white",
+        salary: "₹7,50,000 - ₹12,00,000 LPA",
+        salaryVal: 9.7,
+        experience: "2 - 4 Years",
+        expMin: 2,
+        location: "Kochi",
+        district: "Ernakulam",
+        jobType: "Remote",
+        category: "Software Development",
+        desc: "Help us build the absolute best clinical web dashboard for dental professionals. You will collaborate on complex React forms, custom calendar scheduling widgets, and real-time canvas charting utilities.",
+        skills: ["React.js", "Tailwind CSS", "JavaScript", "HTML5/CSS3", "REST APIs", "State Management"],
+        responsibilities: [
+          "Implement high-fidelity custom UI components using Tailwind.",
+          "Manage application local and remote context state securely.",
+          "Integrate medical charts canvas elements.",
+          "Optimize page speed performance and secure UX compliance."
+        ],
+        benefits: ["Generous equity options (ESOPs)", "Laptops & home office setup provided", "Health cover for dependent parents"],
+        process: ["React UI Coding Test", "Live Technical Screen", "Management round"],
+        isFeatured: true,
+        isApproved: true,
+        postedDate: "2026-05-17"
+      }
+    ];
+
+    // List of Kerala districts for filtering
+    const KERALA_DISTRICTS = [
+      "Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", 
+      "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", 
+      "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"
+    ];
+
+    // --- MAIN REACT APPLICATION COMPONENT ---
+    function App() {
+      // --- THEME STATE ---
+      const [darkMode, setDarkMode] = useState(false);
+
+      // --- AUTHENTICATION STATE ---
+      const [user, setUser] = useState({
+        isLoggedIn: true,
+        name: "Amal Suresh",
+        email: "amal.suresh@kerala.in",
+        role: "candidate", // 'candidate' | 'recruiter' | 'admin'
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
+        bio: "Pre-final year engineering student / Software engineer looking for remote or onsite react development positions in Kochi Infopark.",
+        skills: ["React.js", "JavaScript", "Tailwind CSS", "Node.js", "Git"],
+        education: "B.Tech in Computer Science, KTU (Expected 2027)",
+        experience: "Software Engineer Intern - Fingent, Kochi (3 months)",
+        appliedJobs: ["job1"], // Seed application
+        savedJobs: ["job2"], // Seed bookmark
+        resumeFile: "Amal_Suresh_CV.pdf",
+        resumeScore: 78
+      });
+
+      // --- CORE DB STATE IN REACT ---
+      const [jobs, setJobs] = useState(INITIAL_JOBS);
+      const [companies, setCompanies] = useState(INITIAL_COMPANIES);
+      const [applications, setApplications] = useState([
+        { jobId: "job1", date: "2026-05-18", status: "Under Review", resumeScore: 78, messages: [] }
+      ]);
+      const [pendingJobs, setPendingJobs] = useState([
+        {
+          id: "pending1",
+          title: "Creative Copywriter",
+          companyId: "toonz",
+          companyName: "Toonz Animation",
+          logo: "🎨",
+          logoColor: "bg-yellow-500 text-black",
+          salary: "₹3,50,000 - ₹5,00,000 LPA",
+          salaryVal: 4.2,
+          experience: "1 - 3 Years",
+          expMin: 1,
+          location: "Thiruvananthapuram",
+          district: "Thiruvananthapuram",
+          jobType: "Hybrid",
+          category: "Creative Arts & Design",
+          desc: "Write engaging taglines, children story board drafts, and corporate social posts.",
+          skills: ["Copywriting", "Creative Writing", "Social Media", "English"],
+          responsibilities: ["Draft dialogue for cartoons.", "Coordinate with marketing."],
+          benefits: ["Medical coverage"],
+          process: ["Writing test", "HR"],
+          isFeatured: false,
+          isApproved: false,
+          postedDate: "2026-05-19"
+        }
+      ]);
+
+      // --- INTERACTION NAVIGATION STATE ---
+      const [activePage, setActivePage] = useState("home"); // 'home' | 'jobs' | 'companies' | 'about' | 'contact' | 'dashboard' | 'admin' | 'auth'
+      const [selectedJobId, setSelectedJobId] = useState(null);
+      const [selectedCompanyId, setSelectedCompanyId] = useState(null);
+      const [showNotifications, setShowNotifications] = useState(false);
+      const [notifications, setNotifications] = useState([
+        { id: 1, title: "Welcome to KeralaHire!", message: "Explore and apply to premium local vacancies across Kochi, Trivandrum & more.", time: "1 hour ago", unread: true },
+        { id: 2, title: "Resume Upload Successful", message: "Your CV was scanned. AI Compatibility Score: 78%", time: "30 mins ago", unread: true }
+      ]);
+
+      // --- FILTERS STATE ---
+      const [searchTitle, setSearchTitle] = useState("");
+      const [searchLocation, setSearchLocation] = useState("");
+      const [searchCompany, setSearchCompany] = useState("");
+      
+      const [selectedDistrict, setSelectedDistrict] = useState("");
+      const [selectedCategory, setSelectedCategory] = useState("");
+      const [selectedJobType, setSelectedJobType] = useState("");
+      const [selectedExp, setSelectedExp] = useState("");
+      const [maxSalary, setMaxSalary] = useState(30); // in LPA
+
+      const [jobsPaginationPage, setJobsPaginationPage] = useState(1);
+
+      // --- RECRUITER STATE ---
+      const [recruiterChats, setRecruiterChats] = useState([
+        { id: "amal", name: "Amal Suresh", job: "Senior Full Stack Engineer", messages: [
+          { sender: "recruiter", text: "Hello Amal, we reviewed your React skills. They look promising! Are you available for a brief tech round tomorrow?", time: "2:10 PM" }
+        ]}
+      ]);
+      const [activeChatCandidate, setActiveChatCandidate] = useState(null);
+      const [newMessageText, setNewMessageText] = useState("");
+
+      // --- CHATBOT SUPPORT STATE ---
+      const [chatBotOpen, setChatBotOpen] = useState(false);
+      const [chatMessages, setChatMessages] = useState([
+        { sender: "bot", text: "Namaskaram! Welcome to KeralaHire. I'm KeraBot. Ask me about Technopark/Infopark openings, KSUM startups, or how to get a high resume score!" }
+      ]);
+      const [userBotMsg, setUserBotMsg] = useState("");
+      const [isTyping, setIsTyping] = useState(false);
+
+      // --- RESUME SCORING FLOW STATE ---
+      const [resumeAnalyzing, setResumeAnalyzing] = useState(false);
+      const [analyzedScoreResult, setAnalyzedScoreResult] = useState(null);
+      const [analyzingProgress, setAnalyzingProgress] = useState(0);
+
+      // --- NOTIFICATION HANDLER ---
+      const addNotification = (title, message) => {
+        setNotifications(prev => [
+          { id: Date.now(), title, message, time: "Just now", unread: true },
+          ...prev
+        ]);
+      };
+
+      // --- RESUME SCORE SIMULATOR FUNCTION ---
+      const analyzeResume = (fileName, jobSkills = []) => {
+        setResumeAnalyzing(true);
+        setAnalyzingProgress(10);
+        
+        let interval = setInterval(() => {
+          setAnalyzingProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setTimeout(() => {
+                // Score based on skills match
+                const candidateSkills = user.skills;
+                const matched = jobSkills.length > 0 
+                  ? jobSkills.filter(s => candidateSkills.some(cs => cs.toLowerCase() === s.toLowerCase()))
+                  : candidateSkills;
+                
+                const percentage = jobSkills.length > 0 
+                  ? Math.round(50 + (matched.length / jobSkills.length) * 45)
+                  : Math.round(60 + Math.random() * 30);
+                
+                const result = {
+                  score: Math.min(percentage, 100),
+                  matched: matched.length > 0 ? matched : ["JavaScript", "HTML/CSS"],
+                  missing: jobSkills.filter(s => !candidateSkills.some(cs => cs.toLowerCase() === s.toLowerCase())),
+                  readability: percentage > 80 ? "Excellent" : "Good",
+                  tips: [
+                    "Highlight cloud deployments (AWS/Docker) under your internship description.",
+                    "Include a dedicated Git/GitHub link detailing repository structure.",
+                    "Quantify accomplishments, e.g., 'reduced API fetch latency by 20%'"
+                  ]
+                };
+
+                setUser(prev => ({ ...prev, resumeFile: fileName, resumeScore: result.score }));
+                setAnalyzedScoreResult(result);
+                setResumeAnalyzing(false);
+                addNotification("Resume Scan Completed", `AI compatibility score generated: ${result.score}% for target role.`);
+              }, 400);
+              return 100;
+            }
+            return prev + 15;
+          });
+        }, 150);
+      };
+
+      // --- BOT CONVERSATION ENGINE (Kerala focused) ---
+      const handleSendBotMessage = () => {
+        if (!userBotMsg.trim()) return;
+        const text = userBotMsg;
+        setChatMessages(prev => [...prev, { sender: "user", text }]);
+        setUserBotMsg("");
+        setIsTyping(true);
+
+        setTimeout(() => {
+          let botReply = "I'm here to assist! Could you specify if you are looking for jobs in Kochi Infopark or Thiruvananthapuram Technopark?";
+          const lText = text.toLowerCase();
+          
+          if (lText.includes("technopark") || lText.includes("trivandrum")) {
+            botReply = "Technopark Trivandrum hosts massive companies like Infosys, UST, and Tata Elxsi. Currently, we have positions in Embedded IoT at Tata Elxsi, Spring Boot at Infosys, and 3D Animation at Toonz Animation!";
+          } else if (lText.includes("infopark") || lText.includes("kochi")) {
+            botReply = "Infopark Kochi is bustling with product startups and MNCs. You'll find listings for Senior Full-Stack Engineer at UST Kochi, and Frontend UI roles at CareStack (KSUM incubated)!";
+          } else if (lText.includes("resume") || lText.includes("score")) {
+            botReply = "To boost your resume score on KeralaHire, ensure you define technical skills exactly as keywords (e.g. React.js, Spring Boot) and list local intern projects clearly!";
+          } else if (lText.includes("ksum") || lText.includes("startup")) {
+            botReply = "Kerala Startup Mission (KSUM) provides incubation badges for innovative startups on our portal. Startups like CareStack offer exciting fast-paced careers and solid stock equity options.";
+          } else if (lText.includes("apply") || lText.includes("process")) {
+            botReply = "Simply select a job card, upload your resume, click 'Apply Now' and our AI will immediately generate a compatibility report. Recruiters will contact you directly via the platform messaging dashboard!";
+          }
+
+          setChatMessages(prev => [...prev, { sender: "bot", text: botReply }]);
+          setIsTyping(false);
+        }, 1000);
+      };
+
+      // --- PROCESS JOB SUBMISSION (Recruiter) ---
+      const handlePostJob = (e, formData) => {
+        e.preventDefault();
+        const newJob = {
+          id: `job_${Date.now()}`,
+          title: formData.title,
+          companyId: user.companyId || "ust",
+          companyName: user.companyName || "UST Global",
+          logo: "🌴",
+          logoColor: "bg-teal-600 text-white",
+          salary: formData.salary,
+          salaryVal: parseFloat(formData.salary.replace(/[^0-9.]/g, '')) || 8.0,
+          experience: formData.experience,
+          expMin: parseInt(formData.experience.replace(/[^0-9]/g, '')) || 2,
+          location: formData.location,
+          district: formData.district,
+          jobType: formData.jobType,
+          category: formData.category,
+          desc: formData.desc,
+          skills: formData.skills.split(",").map(s => s.trim()),
+          responsibilities: formData.responsibilities.split("\n").filter(r => r.trim()),
+          benefits: formData.benefits.split(",").map(b => b.trim()),
+          process: ["Resume Screening", "Technical Interview", "HR Round"],
+          isFeatured: false,
+          isApproved: false, // Goes to Admin Panel pending approvals!
+          postedDate: new Date().toISOString().split('T')[0]
+        };
+
+        setPendingJobs(prev => [newJob, ...prev]);
+        addNotification("Job Post Submitted", `"${formData.title}" is queued and pending Admin Panel approval.`);
+        setActivePage("dashboard");
+      };
+
+      // --- APPLY TO A JOB ---
+      const handleApplyJob = (jobId, score) => {
+        if (user.appliedJobs.includes(jobId)) return;
+        
+        // Add to applied lists
+        setUser(prev => ({
+          ...prev,
+          appliedJobs: [...prev.appliedJobs, jobId]
+        }));
+
+        setApplications(prev => [
+          ...prev,
+          { jobId, date: new Date().toISOString().split('T')[0], status: "Applied", resumeScore: score || user.resumeScore || 70, messages: [] }
+        ]);
+
+        addNotification("Applied Successfully!", `Your application with a compatibility score of ${score || user.resumeScore}% was sent.`);
+      };
+
+      // --- MOCK OTP GENERATOR ---
+      const [otpSent, setOtpSent] = useState(false);
+      const [otpTimer, setOtpTimer] = useState(0);
+      const [otpInputs, setOtpInputs] = useState(["", "", "", ""]);
+      const [otpVerified, setOtpVerified] = useState(false);
+
+      const triggerOtp = () => {
+        setOtpSent(true);
+        setOtpTimer(60);
+        addNotification("OTP Sent", "Your simulated OTP is 4721. Input to complete recruiter profile verification.");
+      };
+
+      useEffect(() => {
+        if (otpTimer > 0) {
+          const t = setTimeout(() => setOtpTimer(prev => prev - 1), 1000);
+          return () => clearTimeout(t);
+        }
+      }, [otpTimer]);
+
+      // --- DARK/LIGHT MODE TOGGLER ---
+      const toggleTheme = () => {
+        setDarkMode(!darkMode);
+        if (!darkMode) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      };
+
+      // --- DYNAMIC FILTERED JOBS ---
+      const filteredJobs = useMemo(() => {
+        return jobs.filter(job => {
+          const matchTitle = !searchTitle || job.title.toLowerCase().includes(searchTitle.toLowerCase()) || job.skills.some(s => s.toLowerCase().includes(searchTitle.toLowerCase()));
+          const matchLoc = !searchLocation || job.location.toLowerCase().includes(searchLocation.toLowerCase()) || job.district.toLowerCase().includes(searchLocation.toLowerCase());
+          const matchComp = !searchCompany || job.companyName.toLowerCase().includes(searchCompany.toLowerCase());
+          const matchDistrict = !selectedDistrict || job.district === selectedDistrict;
+          const matchCat = !selectedCategory || job.category === selectedCategory;
+          const matchType = !selectedJobType || job.jobType === selectedJobType;
+          const matchExp = !selectedExp || (
+            selectedExp === "Entry" ? job.expMin <= 2 :
+            selectedExp === "Mid" ? (job.expMin > 2 && job.expMin <= 5) :
+            job.expMin > 5
+          );
+          const matchSalary = job.salaryVal <= maxSalary;
+
+          return matchTitle && matchLoc && matchComp && matchDistrict && matchCat && matchType && matchExp && matchSalary && job.isApproved;
+        });
+      }, [jobs, searchTitle, searchLocation, searchCompany, selectedDistrict, selectedCategory, selectedJobType, selectedExp, maxSalary]);
+
+      // Handle resetting all filters
+      const resetFilters = () => {
+        setSelectedDistrict("");
+        setSelectedCategory("");
+        setSelectedJobType("");
+        setSelectedExp("");
+        setMaxSalary(40);
+        setSearchTitle("");
+        setSearchLocation("");
+        setSearchCompany("");
+      };
+
+      // --- ACTIVE TAB DETAILS RENDERERS ---
+      const activeJobDetails = useMemo(() => {
+        return jobs.find(j => j.id === selectedJobId) || pendingJobs.find(j => j.id === selectedJobId);
+      }, [jobs, pendingJobs, selectedJobId]);
+
+      const activeCompanyDetails = useMemo(() => {
+        return companies.find(c => c.id === selectedCompanyId);
+      }, [companies, selectedCompanyId]);
+
+      // Calculate AI Recommended Jobs for Seeker
+      const aiRecommendedJobs = useMemo(() => {
+        return jobs.filter(j => j.isApproved).map(job => {
+          const candidateSkills = user.skills;
+          const matched = job.skills.filter(s => candidateSkills.some(cs => cs.toLowerCase() === s.toLowerCase()));
+          const score = Math.round(50 + (matched.length / Math.max(job.skills.length, 1)) * 48);
+          return { ...job, matchScore: Math.min(score, 100) };
+        }).sort((a, b) => b.matchScore - a.matchScore).slice(0, 3);
+      }, [jobs, user.skills]);
+
+      return (
+        <div class="min-h-screen flex flex-col font-sans transition-colors duration-300 dark:bg-slate-950 dark:text-slate-200">
+          <div class="kasavu-border"></div>
+
+          {/* --- GLASSMORPHISM NAVBAR --- */}
+          <nav class="glass-nav sticky top-0 z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex items-center justify-between h-16">
+                
+                {/* Brand Logo */}
+                <div class="flex items-center cursor-pointer" onClick={() => { setActivePage("home"); setSelectedJobId(null); setSelectedCompanyId(null); }}>
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-kerala-green to-emerald-400 flex items-center justify-center text-white text-xl font-bold shadow-premium mr-3 font-outfit">
+                    KH
+                  </div>
+                  <div>
+                    <span class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+                      Kerala<span class="text-kerala-gold">Hire</span>
+                    </span>
+                    <span class="block text-[9px] uppercase tracking-widest text-kerala-green dark:text-emerald-400 font-bold -mt-1 font-outfit">
+                      Technopark &bull; Infopark &bull; Startups
+                    </span>
+                  </div>
+                </div>
+
+                {/* Desktop Tabs */}
+                <div class="hidden md:flex space-x-1 font-medium">
+                  {[
+                    { id: "home", label: "Home" },
+                    { id: "jobs", label: "Find Jobs" },
+                    { id: "companies", label: "Companies" },
+                    { id: "about", label: "About Us" },
+                    { id: "contact", label: "Contact" }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      onClick={() => { setActivePage(tab.id); setSelectedJobId(null); setSelectedCompanyId(null); }}
+                      class={`px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
+                        activePage === tab.id 
+                          ? "bg-kerala-green/10 text-kerala-green dark:bg-emerald-500/10 dark:text-emerald-400 font-semibold"
+                          : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Utility Icons & Auth */}
+                <div class="flex items-center space-x-3">
+                  
+                  {/* Theme Toggle */}
+                  <button onClick={toggleTheme} class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Toggle Theme">
+                    <i data-lucide={darkMode ? "sun" : "moon"} class="w-5 h-5"></i>
+                  </button>
+
+                  {/* Notifications */}
+                  <div class="relative">
+                    <button onClick={() => setShowNotifications(!showNotifications)} class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors relative">
+                      <i data-lucide="bell" class="w-5 h-5"></i>
+                      {notifications.some(n => n.unread) && (
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                      )}
+                    </button>
+                    {showNotifications && (
+                      <div class="absolute right-0 mt-3 w-80 glass-modal shadow-2xl rounded-2xl p-4 z-50 text-slate-900 dark:text-white">
+                        <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2 mb-3">
+                          <h4 class="font-bold text-sm">Notifications</h4>
+                          <button onClick={() => { setNotifications(n => n.map(item => ({ ...item, unread: false }))); }} class="text-xs text-kerala-green dark:text-emerald-400 hover:underline">Mark read</button>
+                        </div>
+                        <div class="space-y-3 max-h-60 overflow-y-auto">
+                          {notifications.map(n => (
+                            <div key={n.id} class={`p-2.5 rounded-xl text-xs transition-colors ${n.unread ? 'bg-kerala-green/5 dark:bg-emerald-500/5' : 'bg-transparent'}`}>
+                              <p class="font-semibold">{n.title}</p>
+                              <p class="text-slate-500 dark:text-slate-400 mt-0.5">{n.message}</p>
+                              <span class="text-[10px] text-slate-400 block mt-1">{n.time}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Auth Switch / Role Menu */}
+                  {user.isLoggedIn ? (
+                    <div class="flex items-center space-x-2">
+                      <button 
+                        onClick={() => { setActivePage("dashboard"); setSelectedJobId(null); setSelectedCompanyId(null); }} 
+                        class="hidden sm:flex flex-col items-end leading-none cursor-pointer"
+                      >
+                        <span class="font-bold text-xs text-slate-900 dark:text-white">{user.name}</span>
+                        <span class="text-[10px] text-kerala-green dark:text-emerald-400 font-semibold capitalize">{user.role} Dashboard</span>
+                      </button>
+                      
+                      {/* Interactive Avatar Menu Selector */}
+                      <div class="relative group">
+                        <img 
+                          src={user.avatar} 
+                          alt="Avatar" 
+                          class="w-9 h-9 rounded-xl border border-kerala-green/30 cursor-pointer shadow-premium hover:scale-105 transition-transform" 
+                          onClick={() => setActivePage("dashboard")} 
+                        />
+                        {/* Profile Mode Switcher Tooltip menu */}
+                        <div class="hidden group-hover:block absolute right-0 mt-2 w-48 glass-modal rounded-xl shadow-xl p-2 z-50 text-xs">
+                          <div class="font-bold px-2 py-1 text-slate-400">Switch Role View</div>
+                          <button onClick={() => { setUser(prev => ({ ...prev, role: 'candidate', name: "Amal Suresh", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" })); setActivePage("dashboard"); }} class="w-full text-left px-2 py-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                            👤 Candidate
+                          </button>
+                          <button onClick={() => { setUser(prev => ({ ...prev, role: 'recruiter', name: "Ramesh Kumar (UST)", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80" })); setActivePage("dashboard"); }} class="w-full text-left px-2 py-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                            💼 Recruiter
+                          </button>
+                          <button onClick={() => { setUser(prev => ({ ...prev, role: 'admin', name: "SuperAdmin KeralaHire", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" })); setActivePage("admin"); }} class="w-full text-left px-2 py-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+                            🛡️ Platform Admin
+                          </button>
+                          <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+                          <button onClick={() => setUser(prev => ({ ...prev, isLoggedIn: false }))} class="w-full text-left px-2 py-1.5 rounded hover:bg-red-500/10 text-red-500 flex items-center gap-2">
+                            Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => setActivePage("auth")}
+                      class="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-kerala-green to-emerald-600 rounded-xl shadow-premium hover:shadow-2xl hover:scale-105 active:scale-95 transition-all font-outfit"
+                    >
+                      Login / Join
+                    </button>
+                  )}
+
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          {/* --- MAIN PAGE VIEWS ROUTING --- */}
+          <main class="flex-grow">
+            
+            {/* 1. HOME VIEW */}
+            {activePage === "home" && (
+              <div class="space-y-16 pb-20">
+                {/* Hero Section */}
+                <div class="relative bg-gradient-to-b from-kerala-lightGreen/60 via-slate-50 to-transparent dark:from-kerala-green/10 dark:to-transparent py-20 px-4 text-center overflow-hidden">
+                  
+                  {/* Glowing background meshes */}
+                  <div class="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-kerala-green/10 rounded-full blur-3xl animate-pulse-slow"></div>
+                  <div class="absolute top-1/3 right-1/4 -translate-y-1/2 w-80 h-80 bg-kerala-gold/10 rounded-full blur-3xl animate-pulse-slow"></div>
+
+                  <div class="max-w-4xl mx-auto space-y-6 relative z-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-kerala-green/10 text-kerala-green dark:bg-emerald-500/10 dark:text-emerald-400">
+                      🌴 Kerala's Premium Local Hiring Ecosystem
+                    </span>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+                      Find Your Dream Job in <span class="bg-gradient-to-r from-kerala-green to-emerald-600 dark:from-emerald-400 dark:to-kerala-gold bg-clip-text text-transparent">Kerala</span>
+                    </h1>
+                    <p class="text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-xl mx-auto">
+                      Discover top enterprises in Infopark Kochi, Technopark Trivandrum, Cyberpark Kozhikode, and pioneering local startups.
+                    </p>
+
+                    {/* Integrated Search Bar Panel */}
+                    <div class="glass-card shadow-2xl rounded-2xl md:rounded-full p-2.5 max-w-3xl mx-auto mt-8 flex flex-col md:flex-row gap-2 border border-slate-200 dark:border-slate-800">
+                      
+                      <div class="flex-1 flex items-center px-3 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 pb-2 md:pb-0">
+                        <i data-lucide="search" class="w-5 h-5 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <input 
+                          type="text" 
+                          placeholder="Job Title, Skills e.g. React" 
+                          value={searchTitle} 
+                          onChange={(e) => setSearchTitle(e.target.value)}
+                          class="w-full bg-transparent border-0 focus:outline-none text-sm placeholder-slate-400 text-slate-900 dark:text-white" 
+                        />
+                      </div>
+
+                      <div class="flex-1 flex items-center px-3 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 pb-2 md:pb-0">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <select 
+                          value={selectedDistrict} 
+                          onChange={(e) => setSelectedDistrict(e.target.value)}
+                          class="w-full bg-transparent border-0 focus:outline-none text-sm text-slate-500 dark:text-slate-400 cursor-pointer"
+                        >
+                          <option value="">Choose District / Location</option>
+                          {KERALA_DISTRICTS.map(dist => <option key={dist} value={dist}>{dist}</option>)}
+                        </select>
+                      </div>
+
+                      <div class="flex-1 flex items-center px-3 pb-2 md:pb-0">
+                        <i data-lucide="building-2" class="w-5 h-5 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <input 
+                          type="text" 
+                          placeholder="Company e.g. UST" 
+                          value={searchCompany} 
+                          onChange={(e) => setSearchCompany(e.target.value)}
+                          class="w-full bg-transparent border-0 focus:outline-none text-sm placeholder-slate-400 text-slate-900 dark:text-white" 
+                        />
+                      </div>
+
+                      <button 
+                        onClick={() => setActivePage("jobs")}
+                        class="px-8 py-3.5 bg-gradient-to-r from-kerala-green to-emerald-600 text-white font-bold text-sm rounded-full shadow-premium hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                      >
+                        Search Jobs
+                      </button>
+                    </div>
+
+                    {/* Quick Suggestions tags */}
+                    <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
+                      <span class="text-slate-400">Popular hubs:</span>
+                      {["Kochi Infopark", "Trivandrum Technopark", "Cyberpark Kozhikode", "KSUM Startups"].map(tag => (
+                        <button key={tag} onClick={() => { setSearchLocation(tag); setActivePage("jobs"); }} class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-kerala-green/10 hover:text-kerala-green transition-all">{tag}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Animated Stats Block */}
+                <div class="max-w-7xl mx-auto px-4">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      { id: 1, label: "Total Active Vacancies", val: "12,450+", icon: "briefcase", color: "from-kerala-green/10 to-teal-500/10", border: "border-kerala-green/20 text-kerala-green" },
+                      { id: 2, label: "Registered Companies", val: "850+", icon: "building-2", color: "from-kerala-gold/10 to-amber-500/10", border: "border-kerala-gold/20 text-amber-500" },
+                      { id: 3, label: "Active Professionals", val: "45,000+", icon: "users", color: "from-blue-500/10 to-indigo-500/10", border: "border-blue-500/20 text-blue-500" }
+                    ].map(stat => (
+                      <div key={stat.id} class={`glass-card p-6 rounded-2xl border ${stat.border} shadow-premium flex items-center gap-4 hover:scale-102 transition-transform`}>
+                        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 shadow-md">
+                          <i data-lucide={stat.icon} class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                          <div class="text-3xl font-extrabold font-outfit">{stat.val}</div>
+                          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">{stat.label}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Trending Kerala Companies section */}
+                <div class="max-w-7xl mx-auto px-4 space-y-6">
+                  <div class="flex justify-between items-end border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <div>
+                      <h2 class="text-2xl font-extrabold font-outfit">Trending IT Hubs & Companies</h2>
+                      <p class="text-xs text-slate-500">Fastest-growing engineering offices in Kerala</p>
+                    </div>
+                    <button onClick={() => setActivePage("companies")} class="text-xs text-kerala-green dark:text-emerald-400 hover:underline flex items-center gap-1 font-bold">
+                      View All Companies <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {companies.slice(0, 3).map(comp => (
+                      <div key={comp.id} class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 hover:shadow-premium hover:-translate-y-1 transition-all group flex flex-col justify-between h-56">
+                        <div>
+                          <div class="flex justify-between items-start">
+                            <span class={`w-12 h-12 rounded-xl ${comp.logoColor} flex items-center justify-center text-2xl shadow-md`}>
+                              {comp.logo}
+                            </span>
+                            <div class="flex items-center text-xs bg-yellow-400/10 text-amber-500 font-bold px-2 py-0.5 rounded-lg border border-yellow-400/20">
+                              ⭐ {comp.rating}
+                            </div>
+                          </div>
+                          <h3 class="font-extrabold text-lg mt-3 group-hover:text-kerala-green dark:group-hover:text-emerald-400 transition-colors font-outfit">{comp.name}</h3>
+                          <p class="text-xs text-slate-400 truncate mt-0.5">{comp.industry}</p>
+                          <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 line-clamp-2">{comp.about}</p>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-100 dark:border-slate-900 pt-3">
+                          <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400"><i class="inline-block mr-1">📍</i> {comp.location.split(' / ')[0]}</span>
+                          <button 
+                            onClick={() => { setSelectedCompanyId(comp.id); setActivePage("companies"); }}
+                            class="text-xs font-bold text-kerala-green dark:text-emerald-400 hover:underline"
+                          >
+                            Explore Openings
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Featured Jobs Section */}
+                <div class="max-w-7xl mx-auto px-4 space-y-6">
+                  <div class="flex justify-between items-end border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <div>
+                      <h2 class="text-2xl font-extrabold font-outfit">Featured Job Opportunities</h2>
+                      <p class="text-xs text-slate-500">Premium verified roles offering top industry compensation packages</p>
+                    </div>
+                    <button onClick={() => setActivePage("jobs")} class="text-xs text-kerala-green dark:text-emerald-400 hover:underline flex items-center gap-1 font-bold">
+                      Explore All Jobs <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {jobs.filter(j => j.isFeatured && j.isApproved).map(job => (
+                      <div key={job.id} class="glass-card rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800/40 hover:shadow-premium hover:-translate-y-1 transition-all group flex flex-col justify-between min-h-[300px]">
+                        <div>
+                          <div class="flex justify-between items-start">
+                            <span class={`w-11 h-11 rounded-xl ${job.logoColor} flex items-center justify-center text-xl shadow`}>
+                              {job.logo}
+                            </span>
+                            <span class={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${
+                              job.jobType === "Remote" ? "bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400" :
+                              job.jobType === "Hybrid" ? "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400" :
+                              "bg-kerala-green/10 text-kerala-green dark:bg-emerald-500/10 dark:text-emerald-400"
+                            }`}>
+                              {job.jobType}
+                            </span>
+                          </div>
+                          
+                          <h3 class="font-extrabold text-base mt-4 group-hover:text-kerala-green dark:group-hover:text-emerald-400 transition-colors line-clamp-1 font-outfit">{job.title}</h3>
+                          <p class="text-xs text-slate-500 font-semibold">{job.companyName}</p>
+                          
+                          <div class="grid grid-cols-2 gap-2 my-4 text-xs text-slate-500 dark:text-slate-400">
+                            <span class="flex items-center gap-1"><i class="text-kerala-gold">💼</i> {job.experience}</span>
+                            <span class="flex items-center gap-1"><i class="text-emerald-500">💰</i> {job.salary.split(' - ')[0]}</span>
+                            <span class="flex items-center gap-1 col-span-2"><i class="text-slate-400">📍</i> {job.location}, {job.district}</span>
+                          </div>
+
+                          <div class="flex flex-wrap gap-1 mt-1">
+                            {job.skills.slice(0, 3).map(skill => (
+                              <span key={skill} class="text-[9px] font-semibold px-2 py-0.5 bg-slate-100 dark:bg-slate-900 rounded-md text-slate-600 dark:text-slate-400">{skill}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div class="border-t border-slate-100 dark:border-slate-900 pt-3 mt-4 flex gap-2">
+                          <button 
+                            onClick={() => { setSelectedJobId(job.id); setActivePage("jobs"); }}
+                            class="flex-1 text-center py-2 text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 rounded-xl transition-all"
+                          >
+                            Details
+                          </button>
+                          <button 
+                            onClick={() => { setSelectedJobId(job.id); handleApplyJob(job.id, user.resumeScore); }}
+                            disabled={user.appliedJobs.includes(job.id)}
+                            class={`flex-grow py-2 text-xs font-bold text-white rounded-xl transition-all ${
+                              user.appliedJobs.includes(job.id) 
+                                ? "bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                                : "bg-gradient-to-r from-kerala-green to-emerald-600 hover:opacity-90 active:scale-95 shadow-premium"
+                            }`}
+                          >
+                            {user.appliedJobs.includes(job.id) ? "Applied ✓" : "Quick Apply"}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Local Startup Incubation Spotlight */}
+                <div class="max-w-7xl mx-auto px-4">
+                  <div class="rounded-3xl bg-gradient-to-r from-kerala-darkGreen to-kerala-green p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
+                    <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-kerala-gold/15 rounded-full blur-3xl"></div>
+                    <div class="max-w-2xl space-y-6 relative z-10">
+                      <span class="px-3 py-1 bg-kerala-gold/20 text-kerala-gold text-xs font-bold rounded-full border border-kerala-gold/20 font-outfit">INCUBATED AT KERALA STARTUP MISSION (KSUM)</span>
+                      <h2 class="text-3xl md:text-4xl font-extrabold font-outfit">Are you an early-stage builder?</h2>
+                      <p class="text-sm md:text-base text-slate-200 leading-relaxed">
+                        Kerala's start-up ecosystem is ranking among Asia's best. We partner directly with KSUM. Look for verified startups to earn competitive packages, high equity share options, and build revolutionary products.
+                      </p>
+                      <div class="flex gap-4 pt-2">
+                        <button onClick={() => { setSelectedCategory("Software Development"); setActivePage("jobs"); }} class="px-6 py-3 bg-kerala-gold text-slate-900 font-extrabold text-sm rounded-xl hover:scale-105 active:scale-95 transition-all shadow-md font-outfit">Explore Tech Startups</button>
+                        <button onClick={() => setActivePage("about")} class="px-6 py-3 border border-white/30 hover:bg-white/10 font-bold text-sm rounded-xl transition-all">Learn Incubation</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* 2. FIND JOBS VIEW */}
+            {activePage === "jobs" && (
+              <div class="max-w-7xl mx-auto px-4 py-8">
+                
+                {/* Dual Layout: Details overlay OR Split View */}
+                {selectedJobId ? (
+                  /* --- DETAILED JOB DETAILS PAGE --- */
+                  <div class="space-y-6">
+                    <button onClick={() => setSelectedJobId(null)} class="flex items-center gap-1.5 text-xs text-slate-500 hover:text-kerala-green font-bold mb-4">
+                      <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to All Vacancies
+                    </button>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      {/* Main Job details card */}
+                      <div class="lg:col-span-2 space-y-6">
+                        <div class="glass-card rounded-3xl p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+                          <div class="flex flex-col sm:flex-row justify-between items-start gap-4">
+                            <div class="flex gap-4">
+                              <span class={`w-16 h-16 rounded-2xl ${activeJobDetails.logoColor} flex items-center justify-center text-4xl shadow-md flex-shrink-0`}>
+                                {activeJobDetails.logo}
+                              </span>
+                              <div>
+                                <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white font-outfit">{activeJobDetails.title}</h1>
+                                <p class="text-slate-500 font-semibold hover:underline cursor-pointer" onClick={() => { setSelectedCompanyId(activeJobDetails.companyId); setActivePage("companies"); }}>{activeJobDetails.companyName} ➔</p>
+                                <span class="text-xs text-slate-400 block mt-1"><i class="inline-block mr-1">📍</i> {activeJobDetails.location}, {activeJobDetails.district} &bull; Posted on {activeJobDetails.postedDate}</span>
+                              </div>
+                            </div>
+
+                            <div class="flex gap-2">
+                              <button 
+                                onClick={() => addNotification("Job Bookmarked", `"${activeJobDetails.title}" saved to profile.`)}
+                                class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-500 hover:text-kerala-gold transition-all"
+                                title="Bookmark Job"
+                              >
+                                <i data-lucide="bookmark" class="w-5 h-5"></i>
+                              </button>
+                              <button 
+                                onClick={() => { navigator.clipboard.writeText(window.location.href); addNotification("Link Copied", "Job posting link copied to clipboard."); }}
+                                class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-500 hover:text-kerala-green transition-all"
+                                title="Share Job"
+                              >
+                                <i data-lucide="share-2" class="w-5 h-5"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-2xl bg-slate-100/50 dark:bg-slate-950/40 text-xs border border-slate-200/40 dark:border-slate-900/40">
+                            <div>
+                              <span class="text-slate-400 block">Annual Package</span>
+                              <span class="font-extrabold text-slate-900 dark:text-white mt-1 block">{activeJobDetails.salary}</span>
+                            </div>
+                            <div>
+                              <span class="text-slate-400 block">Experience Min</span>
+                              <span class="font-extrabold text-slate-900 dark:text-white mt-1 block">{activeJobDetails.experience}</span>
+                            </div>
+                            <div>
+                              <span class="text-slate-400 block">Work Model</span>
+                              <span class="font-extrabold text-slate-900 dark:text-white mt-1 block">{activeJobDetails.jobType}</span>
+                            </div>
+                            <div>
+                              <span class="text-slate-400 block">Department</span>
+                              <span class="font-extrabold text-slate-900 dark:text-white mt-1 block">{activeJobDetails.category}</span>
+                            </div>
+                          </div>
+
+                          <div class="space-y-4">
+                            <h3 class="font-extrabold text-lg border-b pb-1.5 font-outfit">Full Job Description</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{activeJobDetails.desc}</p>
+                          </div>
+
+                          <div class="space-y-4">
+                            <h3 class="font-extrabold text-lg border-b pb-1.5 font-outfit">Responsibilities</h3>
+                            <ul class="list-disc pl-5 text-sm text-slate-600 dark:text-slate-300 space-y-2">
+                              {activeJobDetails.responsibilities.map((r, i) => <li key={i}>{r}</li>)}
+                            </ul>
+                          </div>
+
+                          <div class="space-y-4">
+                            <h3 class="font-extrabold text-lg border-b pb-1.5 font-outfit">Required Tech Stack & Skills</h3>
+                            <div class="flex flex-wrap gap-2">
+                              {activeJobDetails.skills.map(skill => {
+                                const matched = user.skills.some(cs => cs.toLowerCase() === skill.toLowerCase());
+                                return (
+                                  <span key={skill} class={`text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
+                                    matched 
+                                      ? "bg-kerala-green/10 text-kerala-green border border-kerala-green/30" 
+                                      : "bg-slate-100 text-slate-500 dark:bg-slate-900 dark:text-slate-400 border border-slate-200/50 dark:border-slate-800/50"
+                                  }`}>
+                                    {matched ? "✓" : "○"} {skill}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                            <span class="block text-[10px] text-slate-400 italic">Green items match skills listed in your profile settings.</span>
+                          </div>
+
+                          <div class="space-y-4">
+                            <h3 class="font-extrabold text-lg border-b pb-1.5 font-outfit">Corporate Benefits</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {activeJobDetails.benefits.map((b, i) => (
+                                <span key={i} class="text-xs text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                                  <i class="text-emerald-500">✔</i> {b}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Side Apply Card with AI Resume Analyzer */}
+                      <div class="space-y-6">
+                        <div class="glass-card rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6 sticky top-24">
+                          
+                          <div class="text-center space-y-2 border-b pb-4">
+                            <h3 class="font-extrabold text-lg font-outfit">Submit Job Application</h3>
+                            <p class="text-xs text-slate-400">Our AI scanner will compute your compatibility score instantly.</p>
+                          </div>
+
+                          {/* Resume Upload Module Container */}
+                          <div class="space-y-4">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest">Your Uploaded Resume</label>
+                            
+                            {resumeAnalyzing ? (
+                              /* Analyzing loading animation state */
+                              <div class="border-2 border-dashed border-kerala-gold/40 rounded-2xl p-6 text-center space-y-3 bg-kerala-gold/5 animate-pulse">
+                                <div class="w-10 h-10 rounded-full bg-kerala-gold/10 flex items-center justify-center text-kerala-gold mx-auto font-bold text-sm">AI</div>
+                                <p class="text-xs font-bold text-kerala-gold">Parsing resume keywords...</p>
+                                <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2">
+                                  <div class="bg-kerala-gold h-2 rounded-full transition-all duration-150" style={{ width: `${analyzingProgress}%` }}></div>
+                                </div>
+                              </div>
+                            ) : analyzedScoreResult ? (
+                              /* Successful parsing score summary */
+                              <div class="border border-kerala-green/30 rounded-2xl p-4 bg-kerala-green/5 space-y-3">
+                                <div class="flex justify-between items-center">
+                                  <div>
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[150px]">📄 {user.resumeFile}</p>
+                                    <span class="text-[10px] text-slate-400">Scanned Successfully</span>
+                                  </div>
+                                  <span class={`font-extrabold text-lg px-2.5 py-1 rounded-xl font-outfit ${
+                                    analyzedScoreResult.score >= 80 ? "bg-kerala-green text-white" :
+                                    analyzedScoreResult.score >= 60 ? "bg-kerala-gold text-slate-950" :
+                                    "bg-red-500 text-white"
+                                  }`}>
+                                    {analyzedScoreResult.score}%
+                                  </span>
+                                </div>
+
+                                <div class="text-[11px] space-y-2 border-t pt-2">
+                                  <div>
+                                    <span class="font-bold block text-slate-500">Matched Stack:</span>
+                                    <p class="text-slate-700 dark:text-slate-300 font-semibold">{analyzedScoreResult.matched.join(', ')}</p>
+                                  </div>
+                                  {analyzedScoreResult.missing.length > 0 && (
+                                    <div>
+                                      <span class="font-bold block text-red-500/80">Missing Keywords:</span>
+                                      <p class="text-slate-400">{analyzedScoreResult.missing.join(', ')}</p>
+                                    </div>
+                                  )}
+                                  <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200/50 dark:border-slate-800/50 mt-1">
+                                    <span class="font-bold block text-kerala-gold">AI Recommended Tip:</span>
+                                    <p class="text-slate-500 italic mt-0.5">{analyzedScoreResult.tips[0]}</p>
+                                  </div>
+                                </div>
+
+                                <button onClick={() => setAnalyzedScoreResult(null)} class="w-full text-center py-1.5 text-[10px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white hover:underline">Re-upload Resume</button>
+                              </div>
+                            ) : (
+                              /* Initial state: Trigger mock upload */
+                              <button 
+                                onClick={() => analyzeResume("Amal_Suresh_CV.pdf", activeJobDetails.skills)}
+                                class="w-full border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center hover:border-kerala-green dark:hover:border-emerald-500/50 transition-colors block cursor-pointer group"
+                              >
+                                <i data-lucide="file-text" class="w-8 h-8 text-slate-400 mx-auto group-hover:scale-110 transition-transform mb-2"></i>
+                                <p class="text-xs font-bold">{user.resumeFile ? `Replace ${user.resumeFile}` : "Upload CV / Resume"}</p>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Click to simulate AI resume scoring.</span>
+                              </button>
+                            )}
+
+                          </div>
+
+                          <div class="space-y-3">
+                            <button 
+                              onClick={() => handleApplyJob(activeJobDetails.id, analyzedScoreResult?.score || user.resumeScore)}
+                              disabled={user.appliedJobs.includes(activeJobDetails.id)}
+                              class={`w-full py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all ${
+                                user.appliedJobs.includes(activeJobDetails.id)
+                                  ? "bg-slate-300 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                                  : "bg-gradient-to-r from-kerala-green to-emerald-600 hover:opacity-90 active:scale-95 shadow-premium"
+                              }`}
+                            >
+                              {user.appliedJobs.includes(activeJobDetails.id) ? "Applied Successfully ✓" : "Apply to UST Global"}
+                            </button>
+                            
+                            <button 
+                              onClick={() => { setActivePage("dashboard"); setSelectedJobId(null); }}
+                              class="w-full py-2.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl text-xs font-bold transition-all"
+                            >
+                              View App Pipeline Trackers
+                            </button>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                ) : (
+                  /* --- JOB DIRECTORY FILTER VIEW --- */
+                  <div class="space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+                      <div>
+                        <h1 class="text-3xl font-extrabold font-outfit">Open Opportunities</h1>
+                        <p class="text-xs text-slate-400">Showing {filteredJobs.length} matchings out of {jobs.filter(j=>j.isApproved).length} verified listings in Kerala</p>
+                      </div>
+                      
+                      {/* Search Filter Quick Inputs */}
+                      <div class="w-full md:w-auto flex flex-wrap gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="Search keyword..." 
+                          value={searchTitle} 
+                          onChange={(e) => setSearchTitle(e.target.value)}
+                          class="px-4 py-2 text-xs rounded-xl glass-card border focus:outline-none focus:border-kerala-green text-slate-900 dark:text-white" 
+                        />
+                        <button onClick={resetFilters} class="px-4 py-2 bg-slate-100 dark:bg-slate-900 hover:bg-red-500/10 hover:text-red-500 text-xs font-bold rounded-xl transition-all">Clear Filters</button>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                      {/* Interactive filters sidebar panel */}
+                      <div class="lg:col-span-1 space-y-6">
+                        <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-md space-y-6">
+                          
+                          <div class="flex justify-between items-center border-b pb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Filters</span>
+                            <i data-lucide="sliders" class="w-4 h-4 text-slate-400"></i>
+                          </div>
+
+                          {/* District filter */}
+                          <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-500">Kerala District</label>
+                            <select 
+                              value={selectedDistrict} 
+                              onChange={(e) => setSelectedDistrict(e.target.value)}
+                              class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
+                            >
+                              <option value="">All Districts</option>
+                              {KERALA_DISTRICTS.map(dist => <option key={dist} value={dist}>{dist}</option>)}
+                            </select>
+                          </div>
+
+                          {/* Category filter */}
+                          <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-500">Department / Role Category</label>
+                            <select 
+                              value={selectedCategory} 
+                              onChange={(e) => setSelectedCategory(e.target.value)}
+                              class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
+                            >
+                              <option value="">All Departments</option>
+                              <option value="Software Development">Software Development</option>
+                              <option value="Hardware & Core Engineering">Hardware & Core Engineering</option>
+                              <option value="Creative Arts & Design">Creative & Art Design</option>
+                              <option value="Customer Success & Operations">Operations & Support</option>
+                            </select>
+                          </div>
+
+                          {/* Job Type filter */}
+                          <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-500">Job Type</label>
+                            <div class="flex gap-2">
+                              {["Onsite", "Remote", "Hybrid"].map(type => (
+                                <button
+                                  key={type}
+                                  onClick={() => setSelectedJobType(selectedJobType === type ? "" : type)}
+                                  class={`flex-1 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
+                                    selectedJobType === type 
+                                      ? "bg-kerala-green text-white border-kerala-green" 
+                                      : "bg-transparent border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900"
+                                  }`}
+                                >
+                                  {type}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Experience filter */}
+                          <div class="space-y-2">
+                            <label class="block text-xs font-bold text-slate-500">Experience Tier</label>
+                            <select 
+                              value={selectedExp} 
+                              onChange={(e) => setSelectedExp(e.target.value)}
+                              class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none"
+                            >
+                              <option value="">Any Experience</option>
+                              <option value="Entry">Entry (0 - 2 Years)</option>
+                              <option value="Mid">Mid-Level (2 - 5 Years)</option>
+                              <option value="Senior">Senior (5+ Years)</option>
+                            </select>
+                          </div>
+
+                          {/* Salary Slider filter */}
+                          <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                              <span class="font-bold text-slate-500">Max Compensation</span>
+                              <span class="font-extrabold text-kerala-green dark:text-emerald-400">₹{maxSalary} LPA</span>
+                            </div>
+                            <input 
+                              type="range" 
+                              min="5" 
+                              max="40" 
+                              value={maxSalary} 
+                              onChange={(e) => setMaxSalary(parseInt(e.target.value))}
+                              class="w-full accent-kerala-green cursor-pointer" 
+                            />
+                            <div class="flex justify-between text-[9px] text-slate-400">
+                              <span>₹5 LPA</span>
+                              <span>₹40 LPA</span>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {/* Listings grid and pagination */}
+                      <div class="lg:col-span-3 space-y-6">
+                        {filteredJobs.length === 0 ? (
+                          <div class="glass-card rounded-2xl p-12 text-center border space-y-4">
+                            <i data-lucide="alert-circle" class="w-12 h-12 text-amber-500 mx-auto"></i>
+                            <h3 class="font-bold text-lg">No Vacancies Match Filters</h3>
+                            <p class="text-xs text-slate-500 max-w-sm mx-auto">Try loosening your district selection or selecting another role category to view other Kerala operations.</p>
+                            <button onClick={resetFilters} class="px-6 py-2.5 bg-kerala-green text-white text-xs font-bold rounded-xl shadow">Show All Jobs</button>
+                          </div>
+                        ) : (
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {filteredJobs.map(job => (
+                              <div key={job.id} class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 hover:shadow-premium hover:-translate-y-0.5 transition-all group flex flex-col justify-between min-h-[250px]">
+                                <div>
+                                  <div class="flex justify-between items-start">
+                                    <span class={`w-10 h-10 rounded-xl ${job.logoColor} flex items-center justify-center text-xl shadow-md`}>
+                                      {job.logo}
+                                    </span>
+                                    <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-400">📍 {job.district}</span>
+                                  </div>
+                                  <h3 class="font-extrabold text-base mt-3 group-hover:text-kerala-green dark:group-hover:text-emerald-400 transition-colors font-outfit">{job.title}</h3>
+                                  <p class="text-xs text-slate-500 font-semibold">{job.companyName}</p>
+                                  
+                                  <p class="text-xs text-slate-400 line-clamp-2 mt-2 leading-relaxed">{job.desc}</p>
+                                  
+                                  <div class="flex flex-wrap gap-1 mt-4">
+                                    {job.skills.slice(0, 3).map(skill => (
+                                      <span key={skill} class="text-[9px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-900 rounded text-slate-500">{skill}</span>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div class="border-t border-slate-100 dark:border-slate-900 pt-3 mt-4 flex items-center justify-between">
+                                  <span class="text-xs font-bold text-slate-500">💰 {job.salary.split(' - ')[0]}</span>
+                                  <button 
+                                    onClick={() => setSelectedJobId(job.id)}
+                                    class="px-4 py-2 bg-slate-950 dark:bg-white dark:text-slate-950 text-white hover:opacity-90 font-extrabold text-xs rounded-xl shadow transition-transform active:scale-95"
+                                  >
+                                    View Details ➔
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Pagination component */}
+                        {filteredJobs.length > 0 && (
+                          <div class="flex justify-center items-center gap-2 pt-6">
+                            <button class="p-2 border rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400 cursor-not-allowed"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <button class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-kerala-green text-white">1</button>
+                            <button class="px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-900">2</button>
+                            <button class="p-2 border rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-400"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* 3. COMPANIES DIRECTORY VIEW */}
+            {activePage === "companies" && (
+              <div class="max-w-7xl mx-auto px-4 py-8">
+                
+                {selectedCompanyId ? (
+                  /* --- COMPANY PROFILE DETAILS VIEW --- */
+                  <div class="space-y-6">
+                    <button onClick={() => setSelectedCompanyId(null)} class="flex items-center gap-1.5 text-xs text-slate-500 hover:text-kerala-green font-bold">
+                      <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Corporate Directory
+                    </button>
+
+                    {/* Gradient Header Banner */}
+                    <div class="relative rounded-3xl overflow-hidden shadow-xl bg-gradient-to-tr from-kerala-darkGreen to-emerald-600 p-6 md:p-10 text-white">
+                      <div class="absolute right-0 bottom-0 opacity-15 translate-x-12 translate-y-12 select-none text-[150px] font-extrabold uppercase">
+                        KERALA
+                      </div>
+                      <div class="flex flex-col md:flex-row gap-6 items-start relative z-10">
+                        <span class={`w-20 h-20 rounded-2xl ${activeCompanyDetails.logoColor} flex items-center justify-center text-5xl shadow-xl flex-shrink-0`}>
+                          {activeCompanyDetails.logo}
+                        </span>
+                        <div class="space-y-2">
+                          <div class="flex flex-wrap items-center gap-2">
+                            <h1 class="text-3xl font-extrabold font-outfit">{activeCompanyDetails.name}</h1>
+                            {activeCompanyDetails.isVerified && (
+                              <span class="px-2.5 py-0.5 bg-yellow-400 text-slate-950 text-[9px] font-extrabold rounded-full uppercase tracking-wider shadow">KSUM Verified</span>
+                            )}
+                          </div>
+                          <p class="text-sm text-emerald-100 font-semibold">{activeCompanyDetails.industry}</p>
+                          <span class="text-xs text-slate-200 block"><i class="inline-block mr-1">📍</i> {activeCompanyDetails.location} &bull; {activeCompanyDetails.employees} Employees</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content Tabs (About / Positions / Gallery & Reviews) */}
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      <div class="lg:col-span-2 space-y-6">
+                        
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">About {activeCompanyDetails.name}</h3>
+                          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{activeCompanyDetails.about}</p>
+                          <a href={activeCompanyDetails.website} target="_blank" class="inline-flex items-center gap-1.5 text-xs text-kerala-green dark:text-emerald-400 font-bold hover:underline">
+                            Visit official website <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                          </a>
+                        </div>
+
+                        {/* Interactive Open Roles listing */}
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">Open Positions ({jobs.filter(j => j.companyId === activeCompanyDetails.id && j.isApproved).length})</h3>
+                          <div class="space-y-4">
+                            {jobs.filter(j => j.companyId === activeCompanyDetails.id && j.isApproved).length === 0 ? (
+                              <p class="text-xs text-slate-400 italic">Currently no open requisitions listed. Check back soon!</p>
+                            ) : (
+                              jobs.filter(j => j.companyId === activeCompanyDetails.id && j.isApproved).map(job => (
+                                <div key={job.id} class="p-4 rounded-xl bg-slate-100/50 dark:bg-slate-900/50 border flex justify-between items-center hover:border-kerala-green/30 transition-all">
+                                  <div>
+                                    <h4 class="font-extrabold text-sm text-slate-900 dark:text-white font-outfit">{job.title}</h4>
+                                    <span class="text-[10px] text-slate-400">{job.location} &bull; {job.salary}</span>
+                                  </div>
+                                  <button onClick={() => { setSelectedJobId(job.id); setActivePage("jobs"); }} class="px-3.5 py-1.5 bg-kerala-green text-white font-bold text-xs rounded-lg transition-transform active:scale-95 shadow">Apply</button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Gallery Showcase grid */}
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">Campus & Workspaces</h3>
+                          <div class="grid grid-cols-3 gap-2">
+                            {activeCompanyDetails.gallery.map((img, i) => (
+                              <img key={i} src={img} alt="Campus" class="rounded-xl h-28 w-full object-cover border border-slate-200 dark:border-slate-800 hover:scale-102 transition-transform shadow-sm" />
+                            ))}
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Side Reviews Column */}
+                      <div class="space-y-6">
+                        <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow space-y-6">
+                          
+                          <div class="border-b pb-3 flex justify-between items-center">
+                            <h3 class="font-extrabold text-sm uppercase tracking-widest text-slate-400">Ratings & Reviews</h3>
+                            <span class="text-xs bg-yellow-400/10 text-amber-500 font-bold px-2 py-0.5 rounded-lg border border-yellow-400/20">
+                              ⭐ {activeCompanyDetails.rating} / 5
+                            </span>
+                          </div>
+
+                          <div class="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                            {activeCompanyDetails.reviews.map((rev, i) => (
+                              <div key={i} class="p-3 bg-slate-100/50 dark:bg-slate-900/40 rounded-xl space-y-2 border">
+                                <div class="flex justify-between items-center text-[10px]">
+                                  <span class="font-bold text-slate-900 dark:text-white">{rev.author}</span>
+                                  <span class="text-amber-500 font-bold">{"⭐".repeat(rev.rating)}</span>
+                                </div>
+                                <p class="text-xs text-slate-500 italic mt-0.5 leading-relaxed">"{rev.comment}"</p>
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Submit custom review form */}
+                          <div class="border-t pt-4 space-y-3">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Write a Review</h4>
+                            <div class="space-y-2">
+                              <input type="text" id="revAuthor" placeholder="Your Name" class="w-full bg-slate-50 dark:bg-slate-900 text-xs px-3 py-2 rounded-lg border text-slate-900 dark:text-white focus:outline-none" />
+                              <textarea id="revComment" placeholder="Write employee feedback..." rows="2" class="w-full bg-slate-50 dark:bg-slate-900 text-xs px-3 py-2 rounded-lg border text-slate-900 dark:text-white focus:outline-none"></textarea>
+                              
+                              <button 
+                                onClick={() => {
+                                  const name = document.getElementById("revAuthor").value;
+                                  const comment = document.getElementById("revComment").value;
+                                  if(!name || !comment) return;
+                                  
+                                  setCompanies(prev => prev.map(c => {
+                                    if (c.id === activeCompanyDetails.id) {
+                                      const updatedReviews = [...c.reviews, { author: name, rating: 5, date: "Just Now", comment }];
+                                      return { ...c, reviews: updatedReviews, reviewCount: c.reviewCount + 1 };
+                                    }
+                                    return c;
+                                  }));
+
+                                  document.getElementById("revAuthor").value = "";
+                                  document.getElementById("revComment").value = "";
+                                  addNotification("Review Submitted", `Review added for ${activeCompanyDetails.name}.`);
+                                }}
+                                class="w-full py-2 bg-gradient-to-r from-kerala-green to-emerald-600 text-white text-xs font-bold rounded-lg transition-transform active:scale-95 shadow"
+                              >
+                                Submit Review
+                              </button>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* --- COMPANIES GRID LISTING --- */
+                  <div class="space-y-6">
+                    <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                      <h1 class="text-3xl font-extrabold font-outfit">Corporate Directory</h1>
+                      <p class="text-xs text-slate-400">Discover operating tech centers and startups within Kerala state</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {companies.map(comp => (
+                        <div key={comp.id} class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-premium hover:-translate-y-0.5 transition-all flex flex-col justify-between min-h-[220px]">
+                          <div>
+                            <div class="flex justify-between items-start">
+                              <span class={`w-12 h-12 rounded-xl ${comp.logoColor} flex items-center justify-center text-3xl shadow-md`}>
+                                {comp.logo}
+                              </span>
+                              {comp.isVerified && (
+                                <span class="px-2 py-0.5 bg-yellow-400 text-slate-950 text-[9px] font-extrabold rounded-lg uppercase tracking-wider shadow-sm">KSUM Verified</span>
+                              )}
+                            </div>
+                            <h3 class="font-extrabold text-lg mt-4 font-outfit">{comp.name}</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">{comp.industry}</p>
+                            <p class="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">{comp.about}</p>
+                          </div>
+                          
+                          <div class="border-t border-slate-100 dark:border-slate-900 pt-3 mt-4 flex items-center justify-between text-xs">
+                            <span class="text-slate-400"><i class="inline-block mr-1">📍</i> {comp.location.split(' / ')[0]}</span>
+                            <button 
+                              onClick={() => setSelectedCompanyId(comp.id)}
+                              class="text-xs font-bold text-kerala-green dark:text-emerald-400 hover:underline"
+                            >
+                              Explore ➔
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* 4. DASHBOARD VIEW */}
+            {activePage === "dashboard" && (
+              <div class="max-w-7xl mx-auto px-4 py-8">
+                
+                {/* CANDIDATE SEEKER VIEW */}
+                {user.role === "candidate" && (
+                  <div class="space-y-8">
+                    
+                    {/* Welcome Header bar */}
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-kerala-lightGreen/40 to-slate-50 dark:from-kerala-green/10 dark:to-transparent p-6 rounded-3xl border border-kerala-green/10">
+                      <div>
+                        <h1 class="text-3xl font-extrabold font-outfit">Candidate Workspace</h1>
+                        <p class="text-xs text-slate-500">Track application statuses, CV scores, and recommendation metrics.</p>
+                      </div>
+                      
+                      <div class="flex gap-2">
+                        <button onClick={() => setActivePage("jobs")} class="px-5 py-2.5 bg-kerala-green text-white text-xs font-bold rounded-xl shadow-premium hover:scale-102 active:scale-98 transition-all">Search All Openings</button>
+                        <button onClick={() => setUser(prev => ({ ...prev, role: 'recruiter', name: "Ramesh Kumar (UST)" }))} class="px-5 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-950 text-xs font-bold transition-all">Switch Recruiter Panel</button>
+                      </div>
+                    </div>
+
+                    {/* Stats panel row */}
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      {[
+                        { label: "Active Applications", val: applications.length, icon: "briefcase", color: "text-kerala-green bg-kerala-green/10" },
+                        { label: "Saved Listings", val: user.savedJobs.length, icon: "bookmark", color: "text-amber-500 bg-amber-500/10" },
+                        { label: "AI CV Rating", val: `${user.resumeScore}%`, icon: "shield", color: "text-blue-500 bg-blue-500/10" },
+                        { label: "Alert Notifications", val: notifications.length, icon: "bell", color: "text-purple-500 bg-purple-500/10" }
+                      ].map((item, idx) => (
+                        <div key={idx} class="glass-card p-5 rounded-2xl border flex items-center gap-4 shadow-sm">
+                          <div class={`w-10 h-10 rounded-xl flex items-center justify-center ${item.color}`}><i data-lucide={item.icon} class="w-5 h-5"></i></div>
+                          <div>
+                            <div class="text-xl font-bold font-outfit">{item.val}</div>
+                            <span class="text-[10px] text-slate-400 block">{item.label}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Seeker Dashboard content split */}
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      
+                      {/* Left: Applications tracker & Saved jobs */}
+                      <div class="lg:col-span-2 space-y-6">
+                        
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">Your Application Pipeline</h3>
+                          
+                          <div class="space-y-4">
+                            {applications.map((app, index) => {
+                              const job = jobs.find(j => j.id === app.jobId) || pendingJobs.find(j => j.id === app.jobId);
+                              if(!job) return null;
+                              return (
+                                <div key={index} class="p-4 rounded-xl bg-slate-100/50 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/50 space-y-3 hover:border-kerala-green/20 transition-all">
+                                  <div class="flex justify-between items-start">
+                                    <div class="flex gap-3">
+                                      <span class={`w-9 h-9 rounded-xl ${job.logoColor} flex items-center justify-center text-lg`}>{job.logo}</span>
+                                      <div>
+                                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">{job.title}</h4>
+                                        <span class="text-[10px] text-slate-400">{job.companyName} &bull; {job.location}</span>
+                                      </div>
+                                    </div>
+                                    
+                                    <span class={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                                      app.status === "Applied" ? "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400" :
+                                      app.status === "Under Review" ? "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400" :
+                                      "bg-kerala-green/15 text-kerala-green dark:bg-emerald-500/10 dark:text-emerald-400"
+                                    }`}>
+                                      {app.status}
+                                    </span>
+                                  </div>
+
+                                  {/* Progress tracker bar */}
+                                  <div class="flex items-center justify-between text-[9px] text-slate-400 pt-1">
+                                    <span class="font-semibold text-kerala-green">1. Applied ✓</span>
+                                    <span class={app.status !== "Applied" ? "font-semibold text-amber-500" : ""}>2. Reviewing {app.status !== "Applied" && "✓"}</span>
+                                    <span>3. Interviewing</span>
+                                    <span>4. Decided</span>
+                                  </div>
+                                  <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5">
+                                    <div class={`h-1.5 rounded-full transition-all ${
+                                      app.status === "Applied" ? "bg-blue-500 w-1/4" :
+                                      app.status === "Under Review" ? "bg-amber-500 w-2/4" : "bg-kerala-green w-3/4"
+                                    }`}></div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* AI personalized recommendations grid */}
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">AI Recommended Openings</h3>
+                          <p class="text-xs text-slate-400 -mt-2">Based on your parsed react/node skills from Amal_Suresh_CV.pdf</p>
+                          
+                          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {aiRecommendedJobs.map(job => (
+                              <div key={job.id} class="p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex flex-col justify-between min-h-[160px] relative group hover:border-kerala-green/20">
+                                <span class="absolute top-3 right-3 text-xs bg-emerald-500/15 text-emerald-500 font-extrabold px-2 py-0.5 rounded-md border border-emerald-500/20">{job.matchScore}% Match</span>
+                                <div>
+                                  <h4 class="font-extrabold text-sm text-slate-900 dark:text-white line-clamp-1 pr-16 font-outfit">{job.title}</h4>
+                                  <span class="text-[10px] text-slate-400 block">{job.companyName} &bull; {job.location}</span>
+                                  <p class="text-[11px] text-slate-400 line-clamp-2 mt-2">Required: {job.skills.slice(0, 3).join(', ')}</p>
+                                </div>
+                                <button onClick={() => { setSelectedJobId(job.id); setActivePage("jobs"); }} class="w-full text-center mt-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-[10px] font-bold rounded-lg transition-colors">Configure Application ➔</button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Right Side: Profile settings card */}
+                      <div class="space-y-6">
+                        <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow space-y-6">
+                          
+                          <div class="text-center space-y-2 border-b pb-4">
+                            <img src={user.avatar} alt="Profile" class="w-16 h-16 rounded-2xl mx-auto shadow-md border-2 border-kerala-green/20" />
+                            <h3 class="font-extrabold text-lg font-outfit">{user.name}</h3>
+                            <p class="text-xs text-slate-400">{user.email}</p>
+                          </div>
+
+                          <div class="space-y-3 text-xs leading-relaxed">
+                            <div>
+                              <span class="font-bold text-slate-400 block uppercase tracking-widest text-[9px]">Professional Bio</span>
+                              <p class="text-slate-600 dark:text-slate-300 mt-1">{user.bio}</p>
+                            </div>
+                            
+                            <div>
+                              <span class="font-bold text-slate-400 block uppercase tracking-widest text-[9px] mb-1.5">Registered Skills</span>
+                              <div class="flex flex-wrap gap-1">
+                                {user.skills.map(s => <span key={s} class="px-2 py-0.5 bg-slate-100 dark:bg-slate-900 border text-slate-600 dark:text-slate-400 rounded-md font-bold">{s}</span>)}
+                              </div>
+                            </div>
+
+                            <div class="border-t pt-4">
+                              <span class="font-bold text-slate-400 block uppercase tracking-widest text-[9px] mb-2">Resume Score Performance</span>
+                              <div class="flex items-center gap-3 bg-kerala-green/5 p-3 rounded-xl border border-kerala-green/10">
+                                <div class="text-2xl font-extrabold text-kerala-green dark:text-emerald-400 font-outfit">{user.resumeScore}%</div>
+                                <div class="text-[10px] text-slate-400">Excellent keywords score. Add 1 more year of Node.js to hit 90%!</div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+                {/* RECRUITER EMPLOYER DASHBOARD */}
+                {user.role === "recruiter" && (
+                  <div class="space-y-8">
+                    
+                    {/* Header */}
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-teal-500/5 to-slate-50 dark:from-emerald-500/10 dark:to-transparent p-6 rounded-3xl border border-emerald-500/10">
+                      <div>
+                        <h1 class="text-3xl font-extrabold font-outfit">Recruiter Headquarters</h1>
+                        <p class="text-xs text-slate-500">Post requisitions, rank candidates by AI compatibility score, and message talent.</p>
+                      </div>
+                      
+                      <div class="flex gap-2">
+                        <button onClick={() => triggerOtp()} class="px-5 py-2.5 bg-kerala-gold text-slate-900 text-xs font-extrabold rounded-xl shadow hover:scale-102 transition-all">Verify OTP Recruiter</button>
+                        <button onClick={() => setUser(prev => ({ ...prev, role: 'candidate', name: "Amal Suresh" }))} class="px-5 py-2.5 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-950 text-xs font-bold transition-all">Candidate Portal</button>
+                      </div>
+                    </div>
+
+                    {/* OTP verification overlays if active */}
+                    {otpSent && !otpVerified && (
+                      <div class="glass-card border-2 border-kerala-gold p-6 rounded-2xl space-y-4 max-w-md mx-auto">
+                        <h4 class="font-extrabold text-sm text-kerala-gold uppercase tracking-widest">Two-Factor OTP Check</h4>
+                        <p class="text-xs text-slate-400">Please enter the 4-digit code sent to your phone (Simulated: 4721):</p>
+                        
+                        <div class="flex justify-center gap-3">
+                          {otpInputs.map((val, idx) => (
+                            <input
+                              key={idx}
+                              type="text"
+                              maxLength="1"
+                              value={val}
+                              onChange={(e) => {
+                                const newInputs = [...otpInputs];
+                                newInputs[idx] = e.target.value;
+                                setOtpInputs(newInputs);
+                              }}
+                              class="w-12 h-12 text-center text-lg font-bold border rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:border-kerala-gold focus:outline-none"
+                            />
+                          ))}
+                        </div>
+
+                        <div class="flex justify-between items-center text-[10px] pt-2">
+                          <button 
+                            onClick={() => {
+                              const code = otpInputs.join('');
+                              if (code === "4721") {
+                                setOtpVerified(true);
+                                addNotification("Verification Succeeded", "Your recruiter profile is verified.");
+                              } else {
+                                addNotification("Verification Failed", "Incorrect OTP entered.");
+                              }
+                            }}
+                            class="px-6 py-2 bg-kerala-gold text-slate-900 font-extrabold rounded-lg hover:opacity-90 shadow"
+                          >
+                            Verify Code
+                          </button>
+                          <span class="text-slate-400">Resend in {otpTimer}s</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Stats panel grid row */}
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      {[
+                        { label: "Active Jobs", val: jobs.filter(j => j.companyId === "ust").length, icon: "briefcase", color: "text-emerald-500 bg-emerald-500/10" },
+                        { label: "Total Candidates", val: 8, icon: "users", color: "text-blue-500 bg-blue-500/10" },
+                        { label: "Interviews Booked", val: 3, icon: "calendar", color: "text-amber-500 bg-amber-500/10" },
+                        { label: "Incubation Badging", val: "KSUM Active", icon: "shield-check", color: "text-yellow-500 bg-yellow-500/10" }
+                      ].map((item, idx) => (
+                        <div key={idx} class="glass-card p-5 rounded-2xl border flex items-center gap-4 shadow-sm">
+                          <div class={`w-10 h-10 rounded-xl flex items-center justify-center ${item.color}`}><i data-lucide={item.icon} class="w-5 h-5"></i></div>
+                          <div>
+                            <div class="text-xl font-bold font-outfit">{item.val}</div>
+                            <span class="text-[10px] text-slate-400 block">{item.label}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      
+                      {/* Left: Applicant Management system */}
+                      <div class="lg:col-span-2 space-y-6">
+                        
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">Applicants Tracking Manager</h3>
+                          
+                          <div class="space-y-4">
+                            {applications.map((app, index) => (
+                              <div key={index} class="p-4 rounded-xl bg-slate-100/50 dark:bg-slate-900/40 border border-slate-200/50 dark:border-slate-800/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-kerala-green/20 transition-all">
+                                <div class="flex gap-3">
+                                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Amal" class="w-10 h-10 rounded-xl border object-cover" />
+                                  <div>
+                                    <div class="flex items-center gap-2">
+                                      <h4 class="font-bold text-sm text-slate-900 dark:text-white">Amal Suresh</h4>
+                                      <span class="px-2 py-0.5 bg-kerala-green text-white text-[9px] font-extrabold rounded-full font-outfit">{app.resumeScore}% Compatibility</span>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400">Applied for React Engineer &bull; Scanned Amal_Suresh_CV.pdf</span>
+                                  </div>
+                                </div>
+
+                                <div class="flex gap-2">
+                                  <button 
+                                    onClick={() => {
+                                      setApplications(prev => prev.map((item, idx) => idx === index ? { ...item, status: "Shortlisted" } : item));
+                                      addNotification("Applicant Shortlisted", "Amal Suresh has been updated to Shortlisted.");
+                                    }}
+                                    class="px-3.5 py-2 bg-gradient-to-r from-kerala-green to-emerald-600 text-white font-bold text-xs rounded-lg transition-transform active:scale-95 shadow"
+                                  >
+                                    Shortlist
+                                  </button>
+                                  <button 
+                                    onClick={() => {
+                                      setActiveChatCandidate("amal");
+                                      // Scroll down or open chat
+                                    }}
+                                    class="px-3.5 py-2 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-950 font-bold text-xs rounded-lg transition-transform"
+                                  >
+                                    Message
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Interactive live messaging system chat mockup with candidate */}
+                        <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-lg font-outfit">Talent Inbox & Messages</h3>
+                          
+                          <div class="grid grid-cols-3 border rounded-xl overflow-hidden h-[300px] bg-slate-100/30 dark:bg-slate-950/20">
+                            {/* Candidate List sidebar */}
+                            <div class="col-span-1 border-r border-slate-200 dark:border-slate-800 p-2 space-y-2 overflow-y-auto">
+                              {recruiterChats.map(c => (
+                                <div 
+                                  key={c.id} 
+                                  onClick={() => setActiveChatCandidate(c.id)}
+                                  class={`p-2 rounded-lg cursor-pointer transition-all ${
+                                    activeChatCandidate === c.id 
+                                      ? "bg-kerala-green/10 text-kerala-green dark:bg-emerald-500/10 dark:text-emerald-400 font-bold" 
+                                      : "hover:bg-slate-100 dark:hover:bg-slate-900 text-xs"
+                                  }`}
+                                >
+                                  <span class="block truncate font-semibold">{c.name}</span>
+                                  <span class="text-[9px] text-slate-400 block truncate">{c.job}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Message log */}
+                            <div class="col-span-2 flex flex-col justify-between h-[300px]">
+                              {activeChatCandidate ? (
+                                <div class="flex-grow flex flex-col justify-between p-3 overflow-hidden">
+                                  <div class="flex-grow overflow-y-auto space-y-3 pr-1 text-xs">
+                                    {recruiterChats.find(c => c.id === activeChatCandidate).messages.map((m, i) => (
+                                      <div key={i} class={`flex flex-col ${m.sender === 'recruiter' ? 'items-end' : 'items-start'}`}>
+                                        <div class={`p-2.5 rounded-2xl max-w-[80%] leading-relaxed ${
+                                          m.sender === 'recruiter' 
+                                            ? 'bg-kerala-green text-white rounded-tr-none' 
+                                            : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-none'
+                                        }`}>
+                                          {m.text}
+                                        </div>
+                                        <span class="text-[9px] text-slate-400 mt-1">{m.time}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  {/* Message input */}
+                                  <div class="border-t pt-2 flex gap-2">
+                                    <input 
+                                      type="text" 
+                                      placeholder="Type your reply..." 
+                                      value={newMessageText}
+                                      onChange={(e) => setNewMessageText(e.target.value)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          if(!newMessageText.trim()) return;
+                                          setRecruiterChats(prev => prev.map(c => {
+                                            if (c.id === activeChatCandidate) {
+                                              return {
+                                                ...c,
+                                                messages: [...c.messages, { sender: "recruiter", text: newMessageText, time: "Just Now" }]
+                                              };
+                                            }
+                                            return c;
+                                          }));
+                                          setNewMessageText("");
+                                          addNotification("Message Sent", "Reply dispatched to applicant inbox.");
+                                        }
+                                      }}
+                                      class="w-full bg-slate-50 dark:bg-slate-900 border text-xs px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" 
+                                    />
+                                    <button 
+                                      onClick={() => {
+                                        if(!newMessageText.trim()) return;
+                                        setRecruiterChats(prev => prev.map(c => {
+                                          if (c.id === activeChatCandidate) {
+                                            return {
+                                              ...c,
+                                              messages: [...c.messages, { sender: "recruiter", text: newMessageText, time: "Just Now" }]
+                                            };
+                                          }
+                                          return c;
+                                        }));
+                                        setNewMessageText("");
+                                        addNotification("Message Sent", "Reply dispatched to applicant inbox.");
+                                      }}
+                                      class="p-2 bg-kerala-green text-white rounded-lg hover:opacity-90 shadow"
+                                    >
+                                      ➔
+                                    </button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div class="flex-grow flex items-center justify-center text-xs text-slate-400 italic">Select an applicant in the sidebar to review logs and send direct messages.</div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      {/* Right: Post a job form */}
+                      <div class="space-y-6">
+                        <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                          <h3 class="font-extrabold text-base border-b pb-2 font-outfit">Create Requisition</h3>
+                          
+                          <form onSubmit={(e) => {
+                            const data = {
+                              title: e.target.pTitle.value,
+                              salary: e.target.pSalary.value,
+                              experience: e.target.pExp.value,
+                              location: e.target.pLoc.value,
+                              district: e.target.pDistrict.value,
+                              jobType: e.target.pJobType.value,
+                              category: e.target.pCategory.value,
+                              desc: e.target.pDesc.value,
+                              skills: e.target.pSkills.value,
+                              responsibilities: e.target.pResp.value,
+                              benefits: e.target.pBenefits.value
+                            };
+                            handlePostJob(e, data);
+                          }} class="space-y-3 text-xs">
+                            <div>
+                              <label class="block font-bold text-slate-400 mb-1">Job Title</label>
+                              <input type="text" name="pTitle" required placeholder="Senior Engineer" class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">Salary Budget</label>
+                                <input type="text" name="pSalary" required placeholder="₹10,00,000 - ₹15,00,000 LPA" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                              </div>
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">Experience Required</label>
+                                <input type="text" name="pExp" required placeholder="3 - 5 Years" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                              </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">Office Location</label>
+                                <input type="text" name="pLoc" required placeholder="Infopark Kochi" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                              </div>
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">District</label>
+                                <select name="pDistrict" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none">
+                                  {KERALA_DISTRICTS.map(dist => <option key={dist} value={dist}>{dist}</option>)}
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">Job Type</label>
+                                <select name="pJobType" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none">
+                                  <option value="Onsite">Onsite</option>
+                                  <option value="Remote">Remote</option>
+                                  <option value="Hybrid">Hybrid</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label class="block font-bold text-slate-400 mb-1">Role Category</label>
+                                <select name="pCategory" class="w-full bg-slate-50 dark:bg-slate-900 border px-2 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none">
+                                  <option value="Software Development">Software Dev</option>
+                                  <option value="Hardware & Core Engineering">Core Engineering</option>
+                                  <option value="Creative Arts & Design">Creative Design</option>
+                                  <option value="Customer Success & Operations">Operations</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div>
+                              <label class="block font-bold text-slate-400 mb-1">Keywords / Skills (Comma Separated)</label>
+                              <input type="text" name="pSkills" required placeholder="React.js, Node.js, AWS" class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                            </div>
+
+                            <div>
+                              <label class="block font-bold text-slate-400 mb-1">Key Responsibilities (One per line)</label>
+                              <textarea name="pResp" required rows="2" placeholder="Develop clean scalable microservices APIs." class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none"></textarea>
+                            </div>
+
+                            <div>
+                              <label class="block font-bold text-slate-400 mb-1">Requisition Summary</label>
+                              <textarea name="pDesc" required rows="2" placeholder="We are seeking senior engineers..." class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none"></textarea>
+                            </div>
+
+                            <div>
+                              <label class="block font-bold text-slate-400 mb-1">Benefits (Comma Separated)</label>
+                              <input type="text" name="pBenefits" placeholder="Medical Cover, WFH Allowance" class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                            </div>
+
+                            <button 
+                              type="submit" 
+                              class="w-full py-3.5 bg-gradient-to-r from-kerala-green to-emerald-600 text-white font-bold rounded-xl transition-all hover:opacity-90 active:scale-95 shadow shadow-premium font-outfit"
+                            >
+                              Dispatch Requisition For Approval
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+            {/* 5. PLATFORM ADMIN CONTROL PANEL */}
+            {activePage === "admin" && (
+              <div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-red-500/5 to-slate-50 dark:from-red-500/10 dark:to-transparent p-6 rounded-3xl border border-red-500/10">
+                  <div>
+                    <h1 class="text-3xl font-extrabold font-outfit">Platform Control Headquarters</h1>
+                    <p class="text-xs text-slate-500">Approve pending job posts, toggle corporate KSUM verification badges, and analyze metrics.</p>
+                  </div>
+                  <button onClick={() => setUser(prev => ({ ...prev, role: 'candidate' }))} class="px-5 py-2.5 bg-slate-950 dark:bg-white dark:text-slate-950 text-white text-xs font-bold rounded-xl shadow transition-all">Sign out Admin</button>
+                </div>
+
+                {/* System Metrics SVG Graphs */}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  
+                  <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md space-y-4">
+                    <h4 class="font-bold text-sm text-slate-400 uppercase tracking-widest">Active Jobs by District</h4>
+                    
+                    <div class="space-y-3">
+                      {[
+                        { dist: "Ernakulam (Kochi)", val: 12, pct: "w-[80%] bg-emerald-500" },
+                        { dist: "Thiruvananthapuram", val: 8, pct: "w-[50%] bg-amber-500" },
+                        { dist: "Kozhikode", val: 3, pct: "w-[20%] bg-blue-500" }
+                      ].map((item, idx) => (
+                        <div key={idx} class="space-y-1 text-xs">
+                          <div class="flex justify-between font-semibold">
+                            <span>{item.dist}</span>
+                            <span>{item.val} postings</span>
+                          </div>
+                          <div class="w-full bg-slate-100 dark:bg-slate-900 rounded-full h-2">
+                            <div class={`h-2 rounded-full ${item.pct}`}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Pending Job Approvals Queue Table */}
+                  <div class="glass-card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md space-y-4 md:col-span-2">
+                    <h4 class="font-bold text-sm text-slate-400 uppercase tracking-widest">Pending Requisition approvals</h4>
+                    
+                    <div class="space-y-3">
+                      {pendingJobs.length === 0 ? (
+                        <p class="text-xs text-slate-400 italic">No requisitions awaiting screening. System is green.</p>
+                      ) : (
+                        pendingJobs.map(j => (
+                          <div key={j.id} class="p-3 bg-slate-100/50 dark:bg-slate-900/40 rounded-xl border flex justify-between items-center text-xs">
+                            <div>
+                              <p class="font-bold text-slate-900 dark:text-white font-outfit">{j.title}</p>
+                              <span class="text-[10px] text-slate-400">{j.companyName} &bull; Budget: {j.salary}</span>
+                            </div>
+                            <div class="flex gap-2">
+                              <button 
+                                onClick={() => {
+                                  // Add to active jobs
+                                  setJobs(prev => [{ ...j, isApproved: true }, ...prev]);
+                                  setPendingJobs(prev => prev.filter(item => item.id !== j.id));
+                                  addNotification("Job Approved", `"${j.title}" is now active globally.`);
+                                }}
+                                class="px-3.5 py-1.5 bg-kerala-green text-white font-bold rounded-lg"
+                              >
+                                Approve
+                              </button>
+                              <button 
+                                onClick={() => {
+                                  setPendingJobs(prev => prev.filter(item => item.id !== j.id));
+                                  addNotification("Job Rejected", `"${j.title}" denied review.`);
+                                }}
+                                class="px-3.5 py-1.5 bg-red-500/10 text-red-500 font-bold rounded-lg"
+                              >
+                                Reject
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Company Incubations Badging Verifications Table */}
+                <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-md space-y-4">
+                  <h4 class="font-bold text-sm text-slate-400 uppercase tracking-widest">Verify Kerala Incubation Startup Mission Badges</h4>
+                  
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left">
+                      <thead class="bg-slate-100 dark:bg-slate-900 text-slate-500 uppercase tracking-widest text-[9px]">
+                        <tr>
+                          <th class="p-3 font-extrabold">Company Name</th>
+                          <th class="p-3 font-extrabold">Hub / Location</th>
+                          <th class="p-3 font-extrabold">Employees</th>
+                          <th class="p-3 font-extrabold">Incubation Status</th>
+                          <th class="p-3 font-extrabold text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                        {companies.map(c => (
+                          <tr key={c.id}>
+                            <td class="p-3 font-bold text-slate-900 dark:text-white font-outfit">{c.name}</td>
+                            <td class="p-3 text-slate-400">{c.location}</td>
+                            <td class="p-3 text-slate-400">{c.employees}</td>
+                            <td class="p-3">
+                              <span class={`px-2 py-0.5 rounded-full font-bold text-[9px] uppercase tracking-wider ${
+                                c.isVerified ? 'bg-yellow-400/10 text-amber-500 border border-yellow-400/25' : 'bg-slate-200 text-slate-500'
+                              }`}>
+                                {c.isVerified ? 'KSUM Active' : 'Self Registered'}
+                              </span>
+                            </td>
+                            <td class="p-3 text-right">
+                              <button 
+                                onClick={() => {
+                                  setCompanies(prev => prev.map(item => item.id === c.id ? { ...item, isVerified: !item.isVerified } : item));
+                                  addNotification("Startup Status Altered", `${c.name} verification status was modified.`);
+                                }}
+                                class="px-3 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-850 font-bold border rounded-lg"
+                              >
+                                Toggle Badge
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* 6. ABOUT US VIEW */}
+            {activePage === "about" && (
+              <div class="max-w-4xl mx-auto px-4 py-12 space-y-10 leading-relaxed text-sm text-slate-600 dark:text-slate-300">
+                <div class="text-center space-y-3">
+                  <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white font-outfit">About KeralaHire</h1>
+                  <span class="text-xs uppercase tracking-widest text-kerala-green dark:text-emerald-400 font-bold">Uniting Professional Talent With The Lush Silicon State</span>
+                </div>
+                
+                <p>
+                  KeralaHire is the premier decentralized digital employment exchange created to bridge the tech and non-tech talent pool within Kerala, India. Under the guidance of modern startups, major multi-nationals (Infosys, UST, Tata Elxsi), and government programs like the <strong>Kerala Startup Mission (KSUM)</strong>, we enable seamless professional hiring.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs font-outfit">
+                  <div class="p-5 bg-gradient-to-br from-kerala-lightGreen/40 to-transparent dark:from-kerala-green/10 rounded-2xl border border-kerala-green/10 space-y-2">
+                    <h4 class="font-extrabold text-base text-kerala-green dark:text-emerald-400">Our Core Vision</h4>
+                    <p class="text-slate-500 dark:text-slate-400">To cultivate high-fidelity economic career development natively within Kerala, minimizing overseas brain-drain by highlighting lucrative regional compensation packages.</p>
+                  </div>
+                  <div class="p-5 bg-gradient-to-br from-kerala-gold/10 to-transparent dark:from-kerala-gold/5 rounded-2xl border border-kerala-gold/20 space-y-2">
+                    <h4 class="font-extrabold text-base text-kerala-gold">Decentralized Incubation</h4>
+                    <p class="text-slate-500 dark:text-slate-400">Enabling startup incubation boards to advertise directly to candidates, offering fast track equity ownership stakes alongside competitive benefits.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 7. CONTACT VIEW */}
+            {activePage === "contact" && (
+              <div class="max-w-4xl mx-auto px-4 py-12 space-y-10">
+                <div class="text-center space-y-3">
+                  <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white font-outfit">Reach Our Headquarters</h1>
+                  <p class="text-xs text-slate-400">Drop us a line and our partner coordinators will respond shortly.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Left: Contact Form */}
+                  <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow space-y-4">
+                    <h3 class="font-extrabold text-lg font-outfit">Send a Message</h3>
+                    
+                    <form onSubmit={(e) => { e.preventDefault(); addNotification("Inquiry Sent Successfully", "Thanks for reaching out. We will contact you soon."); e.target.reset(); }} class="space-y-4 text-xs">
+                      <div>
+                        <label class="block font-bold text-slate-400 mb-1">Your Full Name</label>
+                        <input type="text" required placeholder="Madhavan Pillai" class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                      </div>
+                      <div>
+                        <label class="block font-bold text-slate-400 mb-1">Email Address</label>
+                        <input type="email" required placeholder="madhavan@gmail.com" class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                      </div>
+                      <div>
+                        <label class="block font-bold text-slate-400 mb-1">Detailed Message</label>
+                        <textarea required rows="4" placeholder="How can we assist you today?..." class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none"></textarea>
+                      </div>
+
+                      <button type="submit" class="w-full py-3 bg-gradient-to-r from-kerala-green to-emerald-600 text-white font-bold rounded-xl hover:opacity-90 active:scale-95 shadow transition-all font-outfit">Deliver Inquiry</button>
+                    </form>
+                  </div>
+
+                  {/* Right: Hub Coordinates */}
+                  <div class="space-y-6 text-sm text-slate-600 dark:text-slate-400">
+                    <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow space-y-3">
+                      <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><i class="text-kerala-green">📍</i> Kochi Infopark Office</h4>
+                      <p class="text-xs">Third Floor, KSUM Incubation Building, Infopark Phase-1 Campus, Kakkanad, Ernakulam, Kerala - 682030</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow space-y-3">
+                      <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><i class="text-kerala-gold">📍</i> Trivandrum Technopark Center</h4>
+                      <p class="text-xs">Ground Floor, Thejaswini Building, Technopark Campus Phase-1, Kazhakkoottam, Thiruvananthapuram, Kerala - 695581</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 8. AUTHENTICATION PAGE */}
+            {activePage === "auth" && (
+              <div class="max-w-md mx-auto px-4 py-16">
+                <div class="glass-card rounded-3xl p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-6">
+                  
+                  <div class="text-center space-y-2 border-b pb-4">
+                    <h2 class="text-2xl font-extrabold font-outfit">Join KeralaHire Portal</h2>
+                    <p class="text-xs text-slate-400">Switch account type to configure custom dashboard roles.</p>
+                  </div>
+
+                  <div class="space-y-4">
+                    {/* Role Selection */}
+                    <div>
+                      <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Configure Role type</label>
+                      <div class="flex gap-2">
+                        {["candidate", "recruiter"].map(r => (
+                          <button
+                            key={r}
+                            onClick={() => setUser(prev => ({ ...prev, role: r }))}
+                            class={`flex-grow py-2 rounded-xl text-xs font-bold border transition-all capitalize ${
+                              user.role === r 
+                                ? 'bg-kerala-green text-white border-kerala-green' 
+                                : 'bg-transparent border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900'
+                            }`}
+                          >
+                            {r}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Email Input & Password */}
+                    <div class="space-y-3 text-xs">
+                      <div>
+                        <label class="block font-bold text-slate-400 mb-1">Email ID</label>
+                        <input type="email" placeholder="enter email..." class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                      </div>
+                      <div>
+                        <label class="block font-bold text-slate-400 mb-1">Password</label>
+                        <input type="password" placeholder="enter security key..." class="w-full bg-slate-50 dark:bg-slate-900 border px-3 py-2 rounded-lg text-slate-900 dark:text-white focus:outline-none" />
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        setUser(prev => ({ ...prev, isLoggedIn: true }));
+                        addNotification("Access Granted", `Welcome back! Navigated to ${user.role} workspace.`);
+                        setActivePage("dashboard");
+                      }}
+                      class="w-full py-3.5 bg-gradient-to-r from-kerala-green to-emerald-600 text-white font-extrabold text-sm rounded-xl transition-all shadow shadow-premium font-outfit"
+                    >
+                      Authenticate Credentials
+                    </button>
+
+                    <div class="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-2">
+                      <button 
+                        onClick={() => {
+                          setUser(prev => ({ ...prev, isLoggedIn: true }));
+                          addNotification("Google Sign-In Successful", "Auth tokens configured via Google Secure Sandbox.");
+                          setActivePage("dashboard");
+                        }}
+                        class="w-full py-2.5 border hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+                      >
+                        <span>🔴</span> Continue with Google
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* --- FLOATING CHATBOT SUPPORT PANEL ("KeraBot") --- */}
+          <div class="fixed bottom-6 right-6 z-50">
+            
+            {/* Chatbot Bubble Button */}
+            {!chatBotOpen && (
+              <button 
+                onClick={() => setChatBotOpen(true)}
+                class="w-14 h-14 rounded-full bg-gradient-to-tr from-kerala-green to-emerald-500 text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all animate-float relative cursor-pointer"
+                title="Live Chat Support"
+              >
+                <i data-lucide="message-square" class="w-6 h-6"></i>
+                <span class="absolute -top-1.5 -right-1.5 bg-kerala-gold text-slate-950 font-extrabold text-[8px] px-2 py-0.5 rounded-full border border-white dark:border-slate-950 uppercase tracking-widest shadow">Live</span>
+              </button>
+            )}
+
+            {/* Chat Window Container */}
+            {chatBotOpen && (
+              <div class="w-80 h-96 glass-modal rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between overflow-hidden">
+                
+                {/* Header bar */}
+                <div class="bg-gradient-to-r from-kerala-green to-emerald-600 text-white p-3.5 flex justify-between items-center">
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-bold text-xs">🌴</span>
+                    <div>
+                      <h4 class="font-extrabold text-xs font-outfit">KeraBot Platform Guide</h4>
+                      <span class="text-[9px] opacity-75">Replies instantly &bull; online</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setChatBotOpen(false)} class="text-white hover:opacity-75"><i data-lucide="x" class="w-4 h-4"></i></button>
+                </div>
+
+                {/* Messages log */}
+                <div class="flex-grow p-3 space-y-3 overflow-y-auto text-xs bg-slate-50/50 dark:bg-slate-900/10">
+                  {chatMessages.map((msg, i) => (
+                    <div key={i} class={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                      <div class={`p-2.5 rounded-2xl max-w-[85%] leading-relaxed ${
+                        msg.sender === 'user' 
+                          ? 'bg-kerala-green text-white rounded-tr-none shadow' 
+                          : 'bg-white dark:bg-slate-900 border text-slate-800 dark:text-slate-200 rounded-tl-none shadow-sm'
+                      }`}>
+                        {msg.text}
+                      </div>
+                    </div>
+                  ))}
+                  {isTyping && <div class="text-[10px] text-slate-400 italic">KeraBot is typing response...</div>}
+                </div>
+
+                {/* Input form */}
+                <div class="border-t border-slate-200 dark:border-slate-800 p-2 bg-white dark:bg-slate-950 flex gap-1">
+                  <input 
+                    type="text" 
+                    placeholder="Ask about Technopark, CV analysis..." 
+                    value={userBotMsg}
+                    onChange={(e) => setUserBotMsg(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendBotMessage()}
+                    class="w-full bg-slate-50 dark:bg-slate-900 text-xs px-3 py-2 rounded-xl text-slate-900 dark:text-white focus:outline-none" 
+                  />
+                  <button 
+                    onClick={handleSendBotMessage}
+                    class="p-2 bg-kerala-green text-white rounded-xl hover:opacity-90 shadow"
+                  >
+                    ➔
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+          </div>
+
+          {/* --- FOOTER --- */}
+          <footer class="bg-slate-900 dark:bg-slate-980 text-slate-400 py-12 border-t border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+              
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-kerala-green to-emerald-400 flex items-center justify-center text-white text-base font-bold shadow-premium mr-2.5">KH</div>
+                  <span class="text-lg font-bold text-white font-outfit">Kerala<span class="text-kerala-gold">Hire</span></span>
+                </div>
+                <p class="text-xs leading-relaxed text-slate-500">
+                  Decentralizing career development across Ernakulam, Thiruvananthapuram, Thrissur, and Cyberpark Kozhikode hubs.
+                </p>
+                <div class="text-slate-600 text-[10px]">
+                  &copy; 2026 KeralaHire Platform. Incubated in Kerala Startup Mission. All rights reserved.
+                </div>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-xs uppercase text-slate-300 tracking-wider mb-4">For Candidates</h4>
+                <ul class="space-y-2 text-xs">
+                  <li><button onClick={() => { setActivePage("jobs"); setSelectedJobId(null); }} class="hover:text-white transition-colors">Search Tech Jobs</button></li>
+                  <li><button onClick={() => setActivePage("dashboard")} class="hover:text-white transition-colors">AI Resume score</button></li>
+                  <li><button onClick={() => setActivePage("dashboard")} class="hover:text-white transition-colors">Personalized Recommendations</button></li>
+                  <li><button onClick={() => setActivePage("about")} class="hover:text-white transition-colors">Technopark Shuttle Maps</button></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-xs uppercase text-slate-300 tracking-wider mb-4">For Employers</h4>
+                <ul class="space-y-2 text-xs">
+                  <li><button onClick={() => { setUser(prev => ({ ...prev, role: 'recruiter' })); setActivePage("dashboard"); }} class="hover:text-white transition-colors">Advertise Openings</button></li>
+                  <li><button onClick={() => { setUser(prev => ({ ...prev, role: 'recruiter' })); setActivePage("dashboard"); }} class="hover:text-white transition-colors">Candidate Shortlisting</button></li>
+                  <li><button onClick={() => setActivePage("about")} class="hover:text-white transition-colors">KSUM Badging verifications</button></li>
+                  <li><button onClick={() => setActivePage("contact")} class="hover:text-white transition-colors">Employer API Pricing</button></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-xs uppercase text-slate-300 tracking-wider mb-4">Legal & Support</h4>
+                <ul class="space-y-2 text-xs">
+                  <li><button onClick={() => setActivePage("contact")} class="hover:text-white transition-colors">Submit Support Ticket</button></li>
+                  <li><button onClick={() => setActivePage("about")} class="hover:text-white transition-colors">Privacy Regulations</button></li>
+                  <li><button onClick={() => setActivePage("about")} class="hover:text-white transition-colors">Terms of Operations</button></li>
+                </ul>
+              </div>
+
+            </div>
+          </footer>
+
+        </div>
+      );
+    }
+
+    // Mount App
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+
+    // Load Lucide Icons after React components render
+    setTimeout(() => {
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }, 500);
+  </script>
+</body>
+</html>
